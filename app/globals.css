@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLOBAL STYLES — Ethereal Memory Archive
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --color-bg: #FAF9F7;
+  --color-text: #1F2933;
+  --color-muted: #78716C;
+  --color-accent: #D6D3D1;
+  
+  /* Smooth, buttery scrolling */
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base styles */
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  overflow-x: hidden;
+}
+
+/* Selection style */
+::selection {
+  background-color: rgba(251, 191, 36, 0.15);
+  color: inherit;
+}
+
+/* Scrollbar — subtle, unobtrusive */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 113, 108, 0.2);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 113, 108, 0.35);
+}
+
+/* Hide scrollbar on mobile for cleaner look */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Image defaults */
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Smooth transitions on everything */
+* {
+  transition-property: opacity, transform, box-shadow;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Disable transitions on elements that animate themselves */
+[data-framer-component], 
+.motion-safe\:animate-* {
+  transition: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY — Intimate, refined
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.font-serif {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 400;
+}
+
+.font-serif-light {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Glassmorphism card effect */
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Soft shadow for cards */
+.shadow-ethereal {
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.03),
+    0 10px 20px -5px rgba(0, 0, 0, 0.04),
+    0 25px 50px -12px rgba(0, 0, 0, 0.06);
+}
+
+/* Warm glow effect */
+.glow-warm {
+  box-shadow: 
+    0 0 40px -10px rgba(251, 191, 36, 0.12),
+    0 0 80px -20px rgba(251, 191, 36, 0.08);
+}
+
+/* Text balance for headings */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATIONS — Subtle, intentional
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes subtle-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(0.5deg);
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-float {
+  animation: subtle-float 8s ease-in-out infinite;
+}
+
+.animate-fade-up {
+  animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stagger children animations */
+.stagger-children > * {
+  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SAFE AREA — iPhone 15 notch/dynamic island support
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOUCH OPTIMIZATIONS — Mobile-first experience
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (hover: none) {
+  /* Disable hover effects on touch devices */
+  .hover\:scale-105:hover {
+    transform: none;
+  }
+  
+  /* Better tap targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Prevent rubber-banding on iOS but allow scrolling */
+html {
+  overscroll-behavior: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCE MOTION — Accessibility
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
