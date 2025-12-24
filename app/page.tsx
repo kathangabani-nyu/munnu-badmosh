@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { MemoryCard } from "@/components/MemoryCard";
 
@@ -18,95 +18,143 @@ interface Memory {
   rotation?: number;
 }
 
-// Memories arranged aesthetically
+// Memories arranged aesthetically with funny captions
 const memories: Memory[] = [
   { 
     id: "1", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.37.26 PM.jpeg", 
-    caption: "This escalated quickly.", 
+    caption: "Plot twist: we're both idiots.", 
     rotation: -1.2 
   },
   { 
     id: "2", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.39.36 PM.jpeg", 
-    caption: "Unplanned, but inevitable.", 
+    caption: "This was not in the manual.", 
     rotation: 0.8 
   },
   { 
     id: "3", 
     type: "video", 
     src: "/media/WhatsApp Video 2025-12-21 at 11.38.32 PM.mp4", 
-    caption: "No notes." 
+    caption: "Chaos, but make it cute." 
   },
   { 
     id: "4", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.39.58 PM.jpeg", 
-    caption: "We were both right.", 
+    caption: "We thought we were smart.", 
     rotation: -0.5 
   },
   { 
     id: "5", 
     type: "text", 
-    caption: "Snowfight evidence." 
+    caption: "No regrets, only evidence." 
   },
   { 
     id: "6", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.40.37 PM.jpeg", 
-    caption: "Before everything changed.", 
+    caption: "The calm before the storm.", 
     rotation: 1.1 
   },
   { 
     id: "7", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.41.23 PM.jpeg", 
-    caption: "Perfect timing.", 
+    caption: "Peak decision making right here.", 
     rotation: -0.8 
   },
   { 
     id: "8", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.42.09 PM.jpeg", 
-    caption: "Caught in the moment.", 
+    caption: "Caught red-handed being happy.", 
     rotation: 0.6 
   },
   { 
     id: "9", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.42.24 PM.jpeg", 
-    caption: "No words needed.", 
+    caption: "This explains everything, actually.", 
     rotation: -1.0 
   },
   { 
     id: "10", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.42.41 PM.jpeg", 
-    caption: "This was the plan.", 
+    caption: "We planned this, I swear.", 
     rotation: 0.4 
   },
   { 
     id: "11", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.43.52 PM.jpeg", 
-    caption: "Exactly as intended.", 
+    caption: "Mission accomplished, somehow.", 
     rotation: -0.7 
   },
   { 
     id: "12", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.44.57 PM.jpeg", 
-    caption: "Worth every second.", 
+    caption: "Worth the questionable choices.", 
     rotation: 1.2 
   },
   { 
     id: "13", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.49.21 PM.jpeg", 
-    caption: "The best kind.", 
+    caption: "The best kind of trouble.", 
     rotation: -0.3 
+  },
+  { 
+    id: "14", 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2025-12-23 at 2.30.25 AM.jpeg", 
+    caption: "2am decisions hit different.", 
+    rotation: 0.9 
+  },
+  { 
+    id: "15", 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2025-12-23 at 2.30.48 AM.jpeg", 
+    caption: "Still not tired, somehow.", 
+    rotation: -0.6 
+  },
+  { 
+    id: "16", 
+    type: "video", 
+    src: "/media/WhatsApp Video 2025-12-23 at 6.06.00 PM.mp4", 
+    caption: "Pure, unadulterated chaos." 
+  },
+  { 
+    id: "17", 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2025-12-23 at 6.14.20 PM.jpeg", 
+    caption: "Golden hour, questionable judgment.", 
+    rotation: 1.0 
+  },
+  { 
+    id: "18", 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2025-12-23 at 6.43.11 PM.jpeg", 
+    caption: "Living our best lives.", 
+    rotation: -0.4 
+  },
+  { 
+    id: "19", 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2025-12-23 at 6.43.50 PM.jpeg", 
+    caption: "This one's going in court.", 
+    rotation: 0.7 
+  },
+  { 
+    id: "20", 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2025-12-23 at 6.44.00 PM.jpeg", 
+    caption: "Forever favorite disaster moment.", 
+    rotation: -1.1 
   },
 ];
 
@@ -236,6 +284,107 @@ function Footer() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// AUDIO CONTROLLER — Subtle background audio
+// ═══════════════════════════════════════════════════════════════════════════
+
+function AudioController() {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
+
+  useEffect(() => {
+    // Set volume to 100%
+    if (audioRef.current) {
+      audioRef.current.volume = 1.0;
+    }
+
+    const handleFirstInteraction = () => {
+      if (!hasInteracted && audioRef.current) {
+        setHasInteracted(true);
+        audioRef.current.play().catch(() => {
+          // Autoplay blocked, user will need to click manually
+        });
+        setIsPlaying(true);
+      }
+    };
+
+    // Listen for first scroll or click
+    window.addEventListener("scroll", handleFirstInteraction, { once: true });
+    window.addEventListener("click", handleFirstInteraction, { once: true });
+    window.addEventListener("touchstart", handleFirstInteraction, { once: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleFirstInteraction);
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
+  }, [hasInteracted]);
+
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play();
+        setIsPlaying(true);
+        setHasInteracted(true);
+      }
+    }
+  };
+
+  return (
+    <>
+      <audio
+        ref={audioRef}
+        src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3"
+        loop
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+        onClick={toggleAudio}
+        className="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg hover:bg-white/90 transition-all duration-300 group"
+        aria-label={isPlaying ? "Mute audio" : "Play audio"}
+      >
+        {isPlaying ? (
+          <svg
+            className="w-5 h-5 text-stone-700"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M6.343 6.343l12.728 12.728M6.343 17.657L19.07 4.93"
+            />
+          </svg>
+        ) : (
+          <svg
+            className="w-5 h-5 text-stone-700"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+            />
+          </svg>
+        )}
+      </motion.button>
+    </>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MAIN PAGE
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -253,6 +402,9 @@ export default function MemoryArchive() {
       {/* Background atmosphere */}
       <FloatingParticles />
       <GrainOverlay />
+      
+      {/* Audio controller */}
+      <AudioController />
       
       {/* Ambient gradient backdrop */}
       <div className="fixed inset-0 pointer-events-none z-0">
