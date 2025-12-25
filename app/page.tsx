@@ -18,143 +18,138 @@ interface Memory {
   rotation?: number;
 }
 
-// Memories arranged aesthetically with funny captions
+// Memories arranged in exact order with your captions
 const memories: Memory[] = [
   { 
     id: "1", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.37.26 PM.jpeg", 
-    caption: "Plot twist: we're both idiots.", 
+    caption: "", 
     rotation: -1.2 
   },
   { 
     id: "2", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.39.36 PM.jpeg", 
-    caption: "This was not in the manual.", 
+    src: "/media/WhatsApp Image 2025-12-24 at 4.11.30 PM.jpeg", 
+    caption: "twinning :\"", 
     rotation: 0.8 
   },
   { 
     id: "3", 
-    type: "video", 
-    src: "/media/WhatsApp Video 2025-12-21 at 11.38.32 PM.mp4", 
-    caption: "Chaos, but make it cute." 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.39.36 PM.jpeg", 
+    caption: "<3", 
+    rotation: -0.5 
   },
   { 
     id: "4", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.39.58 PM.jpeg", 
-    caption: "We thought we were smart.", 
-    rotation: -0.5 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.42.41 PM.jpeg", 
+    caption: "prettiest you've ever looked 😂", 
+    rotation: 0.4 
   },
   { 
     id: "5", 
-    type: "text", 
-    caption: "No regrets, only evidence." 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.39.58 PM.jpeg", 
+    caption: "me", 
+    rotation: -0.5 
   },
   { 
     id: "6", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-21 at 11.40.37 PM.jpeg", 
-    caption: "The calm before the storm.", 
+    caption: "you", 
     rotation: 1.1 
   },
   { 
     id: "7", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.41.23 PM.jpeg", 
-    caption: "Peak decision making right here.", 
-    rotation: -0.8 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.42.09 PM.jpeg", 
+    caption: "funnest nightout", 
+    rotation: 0.6 
   },
   { 
     id: "8", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.42.09 PM.jpeg", 
-    caption: "Caught red-handed being happy.", 
-    rotation: 0.6 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.42.24 PM.jpeg", 
+    caption: "this explains everything", 
+    rotation: -1.0 
   },
   { 
     id: "9", 
-    type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.42.24 PM.jpeg", 
-    caption: "This explains everything, actually.", 
-    rotation: -1.0 
+    type: "video", 
+    src: "/media/WhatsApp Video 2025-12-21 at 11.38.32 PM.mp4", 
+    caption: "no way i would forget this" 
   },
   { 
     id: "10", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.42.41 PM.jpeg", 
-    caption: "We planned this, I swear.", 
-    rotation: 0.4 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.41.23 PM.jpeg", 
+    caption: "best meal ever?", 
+    rotation: -0.8 
   },
   { 
     id: "11", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.43.52 PM.jpeg", 
-    caption: "Mission accomplished, somehow.", 
-    rotation: -0.7 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.49.21 PM.jpeg", 
+    caption: "crazy duo 💃🏻🕺🏻", 
+    rotation: -0.3 
   },
   { 
     id: "12", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.44.57 PM.jpeg", 
-    caption: "Worth the questionable choices.", 
-    rotation: 1.2 
+    src: "/media/WhatsApp Image 2025-12-23 at 2.30.25 AM.jpeg", 
+    caption: "can't leave the love of your life behind", 
+    rotation: 0.9 
   },
   { 
     id: "13", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.49.21 PM.jpeg", 
-    caption: "The best kind of trouble.", 
-    rotation: -0.3 
+    src: "/media/WhatsApp Image 2025-12-23 at 2.30.48 AM.jpeg", 
+    caption: "💕", 
+    rotation: -0.6 
   },
   { 
     id: "14", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-23 at 2.30.25 AM.jpeg", 
-    caption: "2am decisions hit different.", 
-    rotation: 0.9 
+    src: "/media/WhatsApp Image 2025-12-23 at 6.14.20 PM.jpeg", 
+    caption: "cutie", 
+    rotation: 1.0 
   },
   { 
     id: "15", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-23 at 2.30.48 AM.jpeg", 
-    caption: "Still not tired, somehow.", 
-    rotation: -0.6 
+    src: "/media/WhatsApp Image 2025-12-23 at 6.43.50 PM.jpeg", 
+    caption: "", 
+    rotation: 0.7 
   },
   { 
     id: "16", 
     type: "video", 
     src: "/media/WhatsApp Video 2025-12-23 at 6.06.00 PM.mp4", 
-    caption: "Pure, unadulterated chaos." 
+    caption: "STEPH CURRY" 
   },
   { 
     id: "17", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-23 at 6.14.20 PM.jpeg", 
-    caption: "Golden hour, questionable judgment.", 
-    rotation: 1.0 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.43.52 PM.jpeg", 
+    caption: "honorable mention*", 
+    rotation: -0.7 
   },
   { 
     id: "18", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-23 at 6.43.11 PM.jpeg", 
-    caption: "Living our best lives.", 
-    rotation: -0.4 
+    src: "/media/WhatsApp Image 2025-12-21 at 11.44.57 PM.jpeg", 
+    caption: "was saving this one", 
+    rotation: 1.2 
   },
   { 
     id: "19", 
     type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-23 at 6.43.50 PM.jpeg", 
-    caption: "This one's going in court.", 
-    rotation: 0.7 
-  },
-  { 
-    id: "20", 
-    type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-23 at 6.44.00 PM.jpeg", 
-    caption: "Forever favorite disaster moment.", 
-    rotation: -1.1 
+    src: "/media/WhatsApp Image 2025-12-23 at 6.43.11 PM.jpeg", 
+    caption: "", 
+    rotation: -0.4 
   },
 ];
 
@@ -201,6 +196,74 @@ function GrainOverlay() {
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
       }}
     />
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CAT MEMES — Floating easter eggs on the sides
+// ═══════════════════════════════════════════════════════════════════════════
+
+interface CatMeme {
+  id: number;
+  src: string;
+  side: "left" | "right";
+  top: string;
+  rotation: number;
+}
+
+const catMemes: CatMeme[] = [
+  { id: 1, src: "/media/memes/WhatsApp Image 2025-12-25 at 3.12.07 AM.jpeg", side: "left", top: "15%", rotation: -8 },
+  { id: 2, src: "/media/memes/WhatsApp Image 2025-12-25 at 3.15.58 AM.jpeg", side: "right", top: "25%", rotation: 12 },
+  { id: 3, src: "/media/memes/WhatsApp Image 2025-12-25 at 3.12.4507 AM.jpeg", side: "left", top: "40%", rotation: -5 },
+  { id: 4, src: "/media/memes/WhatsApp Image 12025-12-25 at 3.12.07 1AM.jpeg", side: "right", top: "50%", rotation: 10 },
+  { id: 5, src: "/media/memes/WhatsApp Image 2025-12-25 at 3.112.07 AM.jpeg", side: "left", top: "65%", rotation: -7 },
+  { id: 6, src: "/media/memes/WhatsApp Image 2025-12-25 at 3.12.07 1AM.jpeg", side: "right", top: "75%", rotation: 9 },
+  { id: 7, src: "/media/memes/WhatsApp Image 2025-2312-25 at 3.12.07 AM.jpeg", side: "left", top: "85%", rotation: -6 },
+];
+
+function FloatingCatMemes() {
+  const { scrollY } = useScroll();
+  
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-10 hidden sm:block">
+      {catMemes.map((meme, index) => {
+        const isLeft = meme.side === "left";
+        const parallaxSpeed = 0.05 + index * 0.02;
+        const translateY = useTransform(scrollY, (value) => value * parallaxSpeed);
+        
+        return (
+          <motion.div
+            key={meme.id}
+            className="absolute w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden opacity-30 blur-[0.5px]"
+            style={{
+              [isLeft ? "left" : "right"]: "-20px",
+              top: meme.top,
+              rotate: meme.rotation,
+              y: translateY,
+            }}
+            initial={{ 
+              x: isLeft ? "-100%" : "100%",
+              opacity: 0 
+            }}
+            animate={{ 
+              x: 0,
+              opacity: 0.3 
+            }}
+            transition={{ 
+              delay: 1 + index * 0.2,
+              duration: 1.5,
+              ease: [0.16, 1, 0.3, 1]
+            }}
+          >
+            <img
+              src={meme.src}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -402,6 +465,9 @@ export default function MemoryArchive() {
       {/* Background atmosphere */}
       <FloatingParticles />
       <GrainOverlay />
+      
+      {/* Floating cat memes */}
+      <FloatingCatMemes />
       
       {/* Audio controller */}
       <AudioController />
