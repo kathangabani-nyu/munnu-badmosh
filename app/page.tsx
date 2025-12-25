@@ -107,7 +107,7 @@ const memories: Memory[] = [
     id: "13", 
     type: "photo", 
     src: "/media/WhatsApp Image 2025-12-23 at 2.30.48 AM.jpeg", 
-    caption: "💕", 
+    caption: "", 
     rotation: -0.6 
   },
   { 
@@ -222,43 +222,44 @@ const catMemes: CatMeme[] = [
 ];
 
 function FloatingCatMemes() {
-  const { scrollY } = useScroll();
-  
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-10 hidden sm:block">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-[15]">
       {catMemes.map((meme, index) => {
         const isLeft = meme.side === "left";
-        const parallaxSpeed = 0.05 + index * 0.02;
-        const translateY = useTransform(scrollY, (value) => value * parallaxSpeed);
         
         return (
           <motion.div
             key={meme.id}
-            className="absolute w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden opacity-30 blur-[0.5px]"
+            className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden opacity-50 z-[15]"
             style={{
-              [isLeft ? "left" : "right"]: "-20px",
+              [isLeft ? "left" : "right"]: "2%",
               top: meme.top,
               rotate: meme.rotation,
-              y: translateY,
             }}
             initial={{ 
-              x: isLeft ? "-100%" : "100%",
-              opacity: 0 
+              opacity: 0,
+              scale: 0.8
             }}
             animate={{ 
-              x: 0,
-              opacity: 0.3 
+              opacity: 0.5,
+              scale: 1,
+              y: [0, -15, 0],
             }}
             transition={{ 
               delay: 1 + index * 0.2,
               duration: 1.5,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.16, 1, 0.3, 1],
+              y: {
+                duration: 4 + index * 0.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
             }}
           >
             <img
               src={meme.src}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-lg"
             />
           </motion.div>
         );
@@ -293,9 +294,9 @@ function LandingSection() {
         className="text-center relative z-10"
       >
         <h1 className="font-serif text-[1.75rem] leading-[1.3] tracking-[-0.02em] text-stone-800">
-          An incomplete record
+          Mementos of Dharampal
           <br />
-          <span className="text-stone-600">of accidental moments.</span>
+          <span className="text-stone-600">and Fattu Badmosh</span>
         </h1>
         
         <motion.p
@@ -304,7 +305,7 @@ function LandingSection() {
           transition={{ delay: 1.2, duration: 1 }}
           className="mt-8 text-[0.7rem] tracking-[0.2em] uppercase text-stone-500 font-light"
         >
-          for private viewing
+          turn the volume up
         </motion.p>
       </motion.div>
       
@@ -347,12 +348,11 @@ function Footer() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// AUDIO CONTROLLER — Subtle background audio
+// AUDIO CONTROLLER — Auto-play background audio
 // ═══════════════════════════════════════════════════════════════════════════
 
 function AudioController() {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
@@ -365,9 +365,8 @@ function AudioController() {
       if (!hasInteracted && audioRef.current) {
         setHasInteracted(true);
         audioRef.current.play().catch(() => {
-          // Autoplay blocked, user will need to click manually
+          // Autoplay blocked, will try again on next interaction
         });
-        setIsPlaying(true);
       }
     };
 
@@ -383,67 +382,12 @@ function AudioController() {
     };
   }, [hasInteracted]);
 
-  const toggleAudio = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play();
-        setIsPlaying(true);
-        setHasInteracted(true);
-      }
-    }
-  };
-
   return (
-    <>
-      <audio
-        ref={audioRef}
-        src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3"
-        loop
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-      />
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        onClick={toggleAudio}
-        className="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg hover:bg-white/90 transition-all duration-300 group"
-        aria-label={isPlaying ? "Mute audio" : "Play audio"}
-      >
-        {isPlaying ? (
-          <svg
-            className="w-5 h-5 text-stone-700"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M6.343 6.343l12.728 12.728M6.343 17.657L19.07 4.93"
-            />
-          </svg>
-        ) : (
-          <svg
-            className="w-5 h-5 text-stone-700"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
-            />
-          </svg>
-        )}
-      </motion.button>
-    </>
+    <audio
+      ref={audioRef}
+      src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3"
+      loop
+    />
   );
 }
 
@@ -469,7 +413,7 @@ export default function MemoryArchive() {
       {/* Floating cat memes */}
       <FloatingCatMemes />
       
-      {/* Audio controller */}
+      {/* Audio controller (hidden, auto-plays) */}
       <AudioController />
       
       {/* Ambient gradient backdrop */}
