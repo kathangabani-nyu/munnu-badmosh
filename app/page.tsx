@@ -457,15 +457,14 @@ export default function MemoryArchive() {
         {/* Memory cards */}
         <section className="max-w-md mx-auto">
           {memories.map((memory, index) => (
-            <div key={memory.id} data-memory-card data-memory-index={index}>
-              <MemoryCard 
-                type={memory.type}
-                src={memory.src}
-                caption={memory.caption}
-                rotation={memory.rotation}
-                index={index}
-              />
-            </div>
+            <MemoryCard 
+              key={memory.id} 
+              type={memory.type}
+              src={memory.src}
+              caption={memory.caption}
+              rotation={memory.rotation}
+              index={index}
+            />
           ))}
         </section>
         
