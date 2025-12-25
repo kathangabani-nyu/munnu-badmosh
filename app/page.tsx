@@ -222,6 +222,41 @@ const catMemes: CatMeme[] = [
 ];
 
 function FloatingCatMemes() {
+  const memeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  
+  useEffect(() => {
+    const observers = memeRefs.current.map((ref, index) => {
+      if (!ref) return null;
+      
+      // Each meme appears when a specific memory card is visible
+      // Map memes to memory indices (randomly distributed)
+      const memoryIndices = [2, 5, 8, 11, 14, 17, 19]; // Random distribution
+      const targetMemoryIndex = memoryIndices[index] || index * 2;
+      
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            ref.style.opacity = "0.7";
+            ref.style.transform = "scale(1)";
+          }
+        },
+        { threshold: 0.3, rootMargin: "-10% 0px" }
+      );
+      
+      // Find the corresponding memory card
+      const memoryCards = document.querySelectorAll('[data-memory-card]');
+      if (memoryCards[targetMemoryIndex]) {
+        observer.observe(memoryCards[targetMemoryIndex]);
+      }
+      
+      return observer;
+    });
+    
+    return () => {
+      observers.forEach(obs => obs?.disconnect());
+    };
+  }, []);
+  
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-[15]">
       {catMemes.map((meme, index) => {
@@ -230,25 +265,19 @@ function FloatingCatMemes() {
         return (
           <motion.div
             key={meme.id}
-            className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden opacity-50 z-[15]"
+            ref={(el) => (memeRefs.current[index] = el)}
+            className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden z-[15] transition-all duration-1000"
             style={{
               [isLeft ? "left" : "right"]: "2%",
-              top: meme.top,
+              top: `${15 + index * 12}%`,
               rotate: meme.rotation,
-            }}
-            initial={{ 
               opacity: 0,
-              scale: 0.8
+              transform: "scale(0.8)",
             }}
             animate={{ 
-              opacity: 0.5,
-              scale: 1,
               y: [0, -15, 0],
             }}
             transition={{ 
-              delay: 1 + index * 0.2,
-              duration: 1.5,
-              ease: [0.16, 1, 0.3, 1],
               y: {
                 duration: 4 + index * 0.5,
                 repeat: Infinity,
@@ -299,14 +328,6 @@ function LandingSection() {
           <span className="text-stone-600">and Fattu Badmosh</span>
         </h1>
         
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4 }}
-          transition={{ delay: 1.2, duration: 1 }}
-          className="mt-8 text-[0.7rem] tracking-[0.2em] uppercase text-stone-500 font-light"
-        >
-          turn the volume up
-        </motion.p>
       </motion.div>
       
       {/* Scroll indicator */}
@@ -341,7 +362,7 @@ function Footer() {
       className="py-20 text-center"
     >
       <p className="text-[0.65rem] tracking-[0.25em] uppercase text-stone-400 font-light">
-        archived quietly
+        well... this was intrusive
       </p>
     </motion.footer>
   );
@@ -434,14 +455,15 @@ export default function MemoryArchive() {
         {/* Memory cards */}
         <section className="max-w-md mx-auto">
           {memories.map((memory, index) => (
-            <MemoryCard 
-              key={memory.id} 
-              type={memory.type}
-              src={memory.src}
-              caption={memory.caption}
-              rotation={memory.rotation}
-              index={index}
-            />
+            <div key={memory.id} data-memory-card data-memory-index={index}>
+              <MemoryCard 
+                type={memory.type}
+                src={memory.src}
+                caption={memory.caption}
+                rotation={memory.rotation}
+                index={index}
+              />
+            </div>
           ))}
         </section>
         
