@@ -432,7 +432,7 @@ export default function MemoryArchive() {
       <GrainOverlay />
       
       {/* Floating cat memes */}
-      <FloatingCatMemes />
+      {/* <FloatingCatMemes /> */}
       
       {/* Audio controller (hidden, auto-plays) */}
       <AudioController />
