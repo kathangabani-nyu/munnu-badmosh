@@ -265,7 +265,7 @@ function FloatingCatMemes() {
         return (
           <motion.div
             key={meme.id}
-            ref={(el) => (memeRefs.current[index] = el)}
+            ref={(el) => { memeRefs.current[index] = el; }}
             className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden z-[15] transition-all duration-1000"
             style={{
               [isLeft ? "left" : "right"]: "2%",
