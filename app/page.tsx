@@ -200,9 +200,10 @@ function GrainOverlay() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CAT MEMES — Floating easter eggs on the sides
+// CAT MEMES — Floating easter eggs on the sides (COMMENTED OUT)
 // ═══════════════════════════════════════════════════════════════════════════
 
+/*
 interface CatMeme {
   id: number;
   src: string;
@@ -296,6 +297,7 @@ function FloatingCatMemes() {
     </div>
   );
 }
+*/
 
 // ═══════════════════════════════════════════════════════════════════════════
 // LANDING SECTION — The emotional entrance
