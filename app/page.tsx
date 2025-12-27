@@ -303,6 +303,41 @@ function FloatingCatMemes() {
 // LANDING SECTION — The emotional entrance
 // ═══════════════════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════════════════
+// RETURN SECTION — Second landing
+// ═══════════════════════════════════════════════════════════════════════════
+
+function ReturnSection() {
+  return (
+    <motion.section 
+      className="h-screen flex flex-col items-center justify-center px-8 relative"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-20%" }}
+      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {/* Soft radial glow */}
+      <div className="absolute inset-0 bg-gradient-radial from-amber-50/30 via-transparent to-transparent" />
+      
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.4, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-center relative z-10"
+      >
+        <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl leading-[1.2] tracking-[-0.02em] text-stone-800">
+          Had a feeling you'd be back :"
+        </h2>
+      </motion.div>
+    </motion.section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LANDING SECTION — The emotional entrance
+// ═══════════════════════════════════════════════════════════════════════════
+
 function LandingSection() {
   const { scrollY } = useScroll();
   const scrollYSpring = useSpring(scrollY, { stiffness: 100, damping: 30 });
