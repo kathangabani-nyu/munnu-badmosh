@@ -489,6 +489,14 @@ export default function MemoryArchive() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-8 h-[1px] bg-stone-300/50" />
         </div>
         
+        {/* Return section */}
+        <ReturnSection />
+        
+        {/* Spacer with subtle divider */}
+        <div className="h-24 relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-8 h-[1px] bg-stone-300/50" />
+        </div>
+        
         {/* Memory cards */}
         <section className="max-w-md mx-auto">
           {memories.map((memory, index) => (
