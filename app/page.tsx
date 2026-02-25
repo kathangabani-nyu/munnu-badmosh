@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { MemoryCard } from "@/components/MemoryCard";
+import { TextingGame } from "@/components/TextingGame/TextingGame";
+import type { GamePhase } from "@/components/TextingGame/types";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MEMORY ARCHIVE — Ethereal Edition
@@ -47,6 +49,13 @@ const memories: Memory[] = [
     src: "/media/WhatsApp Image 2025-12-21 at 11.42.41 PM.jpeg", 
     caption: "prettiest you've ever looked 😂", 
     rotation: 0.4 
+  },
+  { 
+    id: "5-new", 
+    type: "photo", 
+    src: "/media/WhatsApp Image 2026-02-13 at 8.00.22 PM.jpeg", 
+    caption: "nah fr", 
+    rotation: 0.6 
   },
   { 
     id: "5", 
@@ -417,50 +426,38 @@ function AudioController() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// MAIN PAGE
+// ARCHIVE CONTENT — The original memory archive
 // ═══════════════════════════════════════════════════════════════════════════
 
-export default function MemoryArchive() {
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  
-  if (!mounted) return null;
-  
+function ArchiveContent() {
   return (
-    <main className="min-h-screen bg-[#FAF9F7] selection:bg-amber-100/60 overflow-x-hidden">
+    <>
       {/* Background atmosphere */}
       <FloatingParticles />
-      <GrainOverlay />
-      
-      {/* Floating cat memes */}
-      {/* <FloatingCatMemes /> */}
-      
-      {/* Audio controller (hidden, auto-plays) */}
+
+      {/* Audio controller (hidden, auto-plays on first interaction) */}
       <AudioController />
-      
+
       {/* Ambient gradient backdrop */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-rose-100/15 rounded-full blur-3xl" />
       </div>
-      
+
       {/* Content */}
       <div className="relative z-10">
         <LandingSection />
-        
+
         {/* Spacer with subtle divider */}
         <div className="h-24 relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-8 h-[1px] bg-stone-300/50" />
         </div>
-        
+
         {/* Memory cards */}
         <section className="max-w-md mx-auto">
           {memories.map((memory, index) => (
-            <MemoryCard 
-              key={memory.id} 
+            <MemoryCard
+              key={memory.id}
               type={memory.type}
               src={memory.src}
               caption={memory.caption}
@@ -469,9 +466,78 @@ export default function MemoryArchive() {
             />
           ))}
         </section>
-        
+
         <Footer />
       </div>
+    </>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN PAGE — Game intro → transition → memory archive
+// ═══════════════════════════════════════════════════════════════════════════
+
+export default function MemoryArchive() {
+  const [mounted, setMounted] = useState(false);
+  const [gamePhase, setGamePhase] = useState<GamePhase>("playing");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const handleGameComplete = () => {
+    setGamePhase("transitioning");
+    setTimeout(() => {
+      setGamePhase("archive");
+      window.scrollTo(0, 0);
+    }, 1200);
+  };
+
+  return (
+    <main className="min-h-screen bg-[#FAF9F7] selection:bg-amber-100/60 overflow-x-hidden">
+      {/* Grain overlay always visible */}
+      <GrainOverlay />
+
+      {/* Texting Game Phase */}
+      <AnimatePresence>
+        {gamePhase === "playing" && (
+          <TextingGame onComplete={handleGameComplete} />
+        )}
+      </AnimatePresence>
+
+      {/* Transition overlay */}
+      <AnimatePresence>
+        {gamePhase === "transitioning" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="fixed inset-0 bg-[#FAF9F7] z-30 flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 0.5, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+            >
+              <div className="w-12 h-[1px] bg-stone-300 mx-auto" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Memory Archive Phase */}
+      {gamePhase === "archive" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <ArchiveContent />
+        </motion.div>
+      )}
     </main>
   );
 }
