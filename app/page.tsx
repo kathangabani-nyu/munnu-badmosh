@@ -382,29 +382,30 @@ function Footer() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// AUDIO CONTROLLER — Auto-play background audio
+// AUDIO CONTROLLER — Background audio + Radiohead toggle
 // ═══════════════════════════════════════════════════════════════════════════
 
 function AudioController() {
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const bgAudioRef = useRef<HTMLAudioElement>(null);
+  const radioheadRef = useRef<HTMLAudioElement>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [radioheadPlaying, setRadioheadPlaying] = useState(false);
 
   useEffect(() => {
-    // Set volume to 100%
-    if (audioRef.current) {
-      audioRef.current.volume = 1.0;
+    if (bgAudioRef.current) {
+      bgAudioRef.current.volume = 1.0;
+    }
+    if (radioheadRef.current) {
+      radioheadRef.current.volume = 1.0;
     }
 
     const handleFirstInteraction = () => {
-      if (!hasInteracted && audioRef.current) {
+      if (!hasInteracted && bgAudioRef.current) {
         setHasInteracted(true);
-        audioRef.current.play().catch(() => {
-          // Autoplay blocked, will try again on next interaction
-        });
+        bgAudioRef.current.play().catch(() => {});
       }
     };
 
-    // Listen for first scroll or click
     window.addEventListener("scroll", handleFirstInteraction, { once: true });
     window.addEventListener("click", handleFirstInteraction, { once: true });
     window.addEventListener("touchstart", handleFirstInteraction, { once: true });
@@ -416,12 +417,41 @@ function AudioController() {
     };
   }, [hasInteracted]);
 
+  const toggleRadiohead = () => {
+    if (!radioheadRef.current || !bgAudioRef.current) return;
+
+    if (radioheadPlaying) {
+      radioheadRef.current.pause();
+      bgAudioRef.current.play().catch(() => {});
+      setRadioheadPlaying(false);
+    } else {
+      bgAudioRef.current.pause();
+      radioheadRef.current.play().catch(() => {});
+      setRadioheadPlaying(true);
+    }
+  };
+
   return (
-    <audio
-      ref={audioRef}
-      src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3"
-      loop
-    />
+    <>
+      <audio ref={bgAudioRef} src="/media/Alexi Murdoch - Someday Soon.mp3" loop />
+      <audio ref={radioheadRef} src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3" loop />
+
+      {/* Radiohead toggle — small, top-left, always visible */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        onClick={toggleRadiohead}
+        className="fixed top-4 left-4 z-30 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/60 border border-stone-200/50 shadow-sm backdrop-blur-sm cursor-pointer"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6px)" }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <span className="text-[0.55rem] tracking-[0.08em] uppercase text-stone-500 font-light select-none">
+          {radioheadPlaying ? "weird fishes" : "weird fishes"}
+        </span>
+        <span className={`w-1.5 h-1.5 rounded-full ${radioheadPlaying ? "bg-amber-400" : "bg-stone-300"}`} />
+      </motion.button>
+    </>
   );
 }
 
