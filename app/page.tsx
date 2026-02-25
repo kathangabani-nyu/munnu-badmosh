@@ -334,10 +334,10 @@ function LandingSection() {
         className="text-center relative z-10"
       >
         <h1 className="font-serif text-[1.75rem] leading-[1.3] tracking-[-0.02em] text-stone-800">
-          Not bringing it down yet just in case you missed me
+          Cursor notes: wow the user must be really important to the admin engineer
           <br />
           <span className="text-stone-600">
-            (which you often do i am very missing-able 😎)
+            for him to have done this...
           </span>
         </h1>
         
@@ -385,7 +385,7 @@ function Footer() {
 // AUDIO CONTROLLER — Background audio + Radiohead toggle
 // ═══════════════════════════════════════════════════════════════════════════
 
-function AudioController() {
+function AudioController({ showToggle }: { showToggle: boolean }) {
   const bgAudioRef = useRef<HTMLAudioElement>(null);
   const radioheadRef = useRef<HTMLAudioElement>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -436,21 +436,23 @@ function AudioController() {
       <audio ref={bgAudioRef} src="/media/Alexi Murdoch - Someday Soon.mp3" loop />
       <audio ref={radioheadRef} src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3" loop />
 
-      {/* Radiohead toggle — small, top-left, always visible */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        onClick={toggleRadiohead}
-        className="fixed top-4 left-4 z-30 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/60 border border-stone-200/50 shadow-sm backdrop-blur-sm cursor-pointer"
-        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6px)" }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <span className="text-[0.55rem] tracking-[0.08em] uppercase text-stone-500 font-light select-none">
-          {radioheadPlaying ? "weird fishes" : "weird fishes"}
-        </span>
-        <span className={`w-1.5 h-1.5 rounded-full ${radioheadPlaying ? "bg-amber-400" : "bg-stone-300"}`} />
-      </motion.button>
+      {/* Radiohead toggle — small, top-left, only visible in archive */}
+      {showToggle && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.8 }}
+          onClick={toggleRadiohead}
+          className="fixed top-4 left-4 z-30 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/60 border border-stone-200/50 shadow-sm backdrop-blur-sm cursor-pointer"
+          style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6px)" }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span className="text-[0.55rem] tracking-[0.08em] uppercase text-stone-500 font-light select-none">
+            weird fishes
+          </span>
+          <span className={`w-1.5 h-1.5 rounded-full ${radioheadPlaying ? "bg-amber-400" : "bg-stone-300"}`} />
+        </motion.button>
+      )}
     </>
   );
 }
@@ -464,9 +466,6 @@ function ArchiveContent() {
     <>
       {/* Background atmosphere */}
       <FloatingParticles />
-
-      {/* Audio controller (hidden, auto-plays on first interaction) */}
-      <AudioController />
 
       {/* Ambient gradient backdrop */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -529,6 +528,9 @@ export default function MemoryArchive() {
     <main className="min-h-screen bg-[#FAF9F7] selection:bg-amber-100/60 overflow-x-hidden">
       {/* Grain overlay always visible */}
       <GrainOverlay />
+
+      {/* Audio — always mounted, toggle only shows in archive */}
+      <AudioController showToggle={gamePhase === "archive"} />
 
       {/* Texting Game Phase */}
       <AnimatePresence>

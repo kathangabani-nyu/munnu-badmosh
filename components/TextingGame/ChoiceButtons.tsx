@@ -32,7 +32,7 @@ export function ChoiceButtons({ choices, onChoose, disabled }: ChoiceButtonsProp
           onClick={() => !disabled && onChoose(choice)}
           disabled={disabled}
           className={`
-            w-full text-left px-4 py-3 rounded-2xl
+            w-full text-left px-4 py-3 rounded-2xl rounded-br-md
             bg-gradient-to-r from-stone-100/80 to-stone-50/80
             border border-stone-200/60
             text-stone-700 text-[0.875rem] font-sans
