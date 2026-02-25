@@ -22,12 +22,19 @@ interface Memory {
 
 // Memories arranged in exact order with your captions
 const memories: Memory[] = [
-  { 
-    id: "1", 
-    type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.37.26 PM.jpeg", 
-    caption: "", 
-    rotation: -1.2 
+  {
+    id: "0-new",
+    type: "photo",
+    src: "/media/WhatsApp Image 2026-02-13 at 8.00.36 PM.jpeg",
+    caption: "legally blind and emotionally unstable",
+    rotation: 0.9
+  },
+  {
+    id: "1",
+    type: "photo",
+    src: "/media/WhatsApp Image 2025-12-21 at 11.37.26 PM.jpeg",
+    caption: "",
+    rotation: -1.2
   },
   { 
     id: "2", 
@@ -91,33 +98,46 @@ const memories: Memory[] = [
     src: "/media/WhatsApp Video 2025-12-21 at 11.38.32 PM.mp4", 
     caption: "no way i would forget this" 
   },
-  { 
-    id: "10", 
-    type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.41.23 PM.jpeg", 
-    caption: "best meal ever?", 
-    rotation: -0.8 
+  {
+    id: "10",
+    type: "photo",
+    src: "/media/WhatsApp Image 2025-12-21 at 11.41.23 PM.jpeg",
+    caption: "best meal ever?",
+    rotation: -0.8
   },
-  { 
-    id: "11", 
-    type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-21 at 11.49.21 PM.jpeg", 
-    caption: "crazy duo 💃🏻🕺🏻", 
-    rotation: -0.3 
+  {
+    id: "10-new",
+    type: "video",
+    src: "/media/WhatsApp Video 2026-02-13 at 8.05.19 PM.mp4",
+    caption: "ummm 👉🏻👈🏻"
   },
-  { 
-    id: "12", 
-    type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-23 at 2.30.25 AM.jpeg", 
-    caption: "can't leave the love of your life behind", 
-    rotation: 0.9 
+  {
+    id: "11",
+    type: "photo",
+    src: "/media/WhatsApp Image 2025-12-21 at 11.49.21 PM.jpeg",
+    caption: "crazy duo 💃🏻🕺🏻",
+    rotation: -0.3
   },
-  { 
-    id: "13", 
-    type: "photo", 
-    src: "/media/WhatsApp Image 2025-12-23 at 2.30.48 AM.jpeg", 
-    caption: "", 
-    rotation: -0.6 
+  {
+    id: "12",
+    type: "photo",
+    src: "/media/WhatsApp Image 2025-12-23 at 2.30.25 AM.jpeg",
+    caption: "can't leave the love of your life behind",
+    rotation: 0.9
+  },
+  {
+    id: "12-new",
+    type: "photo",
+    src: "/media/WhatsApp Image 2026-02-14 at 5.02.40 PM.jpeg",
+    caption: "",
+    rotation: -0.4
+  },
+  {
+    id: "13",
+    type: "photo",
+    src: "/media/WhatsApp Image 2025-12-23 at 2.30.48 AM.jpeg",
+    caption: "",
+    rotation: -0.6
   },
   { 
     id: "14", 
@@ -333,13 +353,9 @@ function LandingSection() {
         transition={{ duration: 1.4, ease: [0.25, 0.1, 0.25, 1] }}
         className="text-center relative z-10"
       >
-        <h1 className="font-serif text-[1.75rem] leading-[1.3] tracking-[-0.02em] text-stone-800">
-          Cursor notes: wow the user must be really important to the admin engineer
-          <br />
-          <span className="text-stone-600">
-            for him to have done this...
-          </span>
-        </h1>
+        <p className="text-[0.7rem] tracking-[0.08em] text-stone-400 font-light font-sans leading-[1.6] max-w-[280px] mx-auto">
+          cursor notes: wow the user must be really important to the admin engineer for him to have done this...
+        </p>
         
       </motion.div>
       
@@ -374,8 +390,8 @@ function Footer() {
       viewport={{ once: true }}
       className="py-20 text-center"
     >
-      <p className="text-[0.65rem] tracking-[0.25em] uppercase text-stone-400 font-light">
-        well... this was intrusive
+      <p className="text-[0.55rem] tracking-[0.08em] text-stone-400/70 font-light font-sans">
+        wait how do i remove this? cursor stop. CURSOR STOP WRITING.
       </p>
     </motion.footer>
   );
@@ -467,6 +483,9 @@ function ArchiveContent() {
       {/* Background atmosphere */}
       <FloatingParticles />
 
+      {/* Audio controller — plays on first scroll/click in archive */}
+      <AudioController showToggle={true} />
+
       {/* Ambient gradient backdrop */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl" />
@@ -528,9 +547,6 @@ export default function MemoryArchive() {
     <main className="min-h-screen bg-[#FAF9F7] selection:bg-amber-100/60 overflow-x-hidden">
       {/* Grain overlay always visible */}
       <GrainOverlay />
-
-      {/* Audio — always mounted, toggle only shows in archive */}
-      <AudioController showToggle={gamePhase === "archive"} />
 
       {/* Texting Game Phase */}
       <AnimatePresence>

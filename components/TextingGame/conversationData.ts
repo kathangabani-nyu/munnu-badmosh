@@ -152,7 +152,7 @@ export const conversationData: ConversationData = {
         {
           id: "qi2",
           sender: "them",
-          text: "before i show you what i made",
+          text: "before i tell you what i did",
           delay: 400,
           typingDuration: 1200,
         },
@@ -299,31 +299,132 @@ export const conversationData: ConversationData = {
         },
       ],
       choices: [
-        { id: "c5a", text: "give kathan the last chocolate strawberry", nextNodeId: "wyr_response" },
-        { id: "c5b", text: "be personally responsible for the extinction of puppies", nextNodeId: "wyr_response" },
-        { id: "c5c", text: "live without wifi forever", nextNodeId: "wyr_response" },
+        { id: "c5a", text: "give kathan the last chocolate strawberry", nextNodeId: "wyr_resp_strawberry" },
+        { id: "c5b", text: "be personally responsible for the extinction of puppies", nextNodeId: "wyr_resp_puppies" },
+        { id: "c5c", text: "live without wifi forever", nextNodeId: "wyr_resp_wifi" },
       ],
     },
 
-    wyr_response: {
-      id: "wyr_response",
+    wyr_resp_strawberry: {
+      id: "wyr_resp_strawberry",
       messages: [
         {
-          id: "wyrr1",
+          id: "wyrs1",
           sender: "them",
-          text: "interesting choice",
+          text: "CORRECT ANSWER",
+          delay: 300,
+          typingDuration: 600,
+        },
+        {
+          id: "wyrs2",
+          sender: "them",
+          text: "see that's all i ever wanted",
+          delay: 400,
+          typingDuration: 1200,
+        },
+        {
+          id: "wyrs3",
+          sender: "them",
+          text: "just one chocolate strawberry and your undying loyalty",
+          delay: 300,
+          typingDuration: 1800,
+        },
+      ],
+      choices: [
+        { id: "c5sa", text: "you're unhinged", nextNodeId: "wyr_converge" },
+        { id: "c5sb", text: "that escalated", nextNodeId: "wyr_converge" },
+      ],
+    },
+
+    wyr_resp_puppies: {
+      id: "wyr_resp_puppies",
+      messages: [
+        {
+          id: "wyrp1",
+          sender: "them",
+          text: "MUDRA.",
+          delay: 300,
+          typingDuration: 500,
+        },
+        {
+          id: "wyrp2",
+          sender: "them",
+          text: "the PUPPIES???",
           delay: 400,
           typingDuration: 800,
         },
         {
-          id: "wyrr2",
+          id: "wyrp3",
+          sender: "them",
+          text: "over a CHOCOLATE STRAWBERRY???",
+          delay: 300,
+          typingDuration: 1200,
+        },
+        {
+          id: "wyrp4",
+          sender: "them",
+          text: "i'm genuinely concerned about your moral compass",
+          delay: 400,
+          typingDuration: 1800,
+        },
+      ],
+      choices: [
+        { id: "c5pa", text: "you made the options!!", nextNodeId: "wyr_converge" },
+        { id: "c5pb", text: "it was a trick question and you know it", nextNodeId: "wyr_converge" },
+      ],
+    },
+
+    wyr_resp_wifi: {
+      id: "wyr_resp_wifi",
+      messages: [
+        {
+          id: "wyrw1",
+          sender: "them",
+          text: "wifi??? WIFI????",
+          delay: 300,
+          typingDuration: 800,
+        },
+        {
+          id: "wyrw2",
+          sender: "them",
+          text: "you would give up the entire internet",
+          delay: 400,
+          typingDuration: 1400,
+        },
+        {
+          id: "wyrw3",
+          sender: "them",
+          text: "before giving me a single chocolate strawberry",
+          delay: 300,
+          typingDuration: 1600,
+        },
+        {
+          id: "wyrw4",
+          sender: "them",
+          text: "noted. saved. screenshotted. backed up to the cloud.",
+          delay: 400,
+          typingDuration: 2000,
+        },
+      ],
+      choices: [
+        { id: "c5wa", text: "you can't screenshot a conversation you wrote", nextNodeId: "wyr_converge" },
+        { id: "c5wb", text: "i would have no cloud without wifi", nextNodeId: "wyr_converge" },
+      ],
+    },
+
+    // ── WYR CONVERGENCE → QUESTION 3 ────────────────────
+    wyr_converge: {
+      id: "wyr_converge",
+      messages: [
+        {
+          id: "wyrc1",
           sender: "them",
           text: "question 3 and this one's important",
           delay: 500,
           typingDuration: 1400,
         },
         {
-          id: "wyrr3",
+          id: "wyrc2",
           sender: "them",
           text: "would you rather lose to kathan in a snowfight",
           delay: 400,
