@@ -344,6 +344,9 @@ function Footer() {
       <p className="text-[0.55rem] tracking-[0.08em] text-stone-400/70 font-light font-sans">
         wait how do i remove this? cursor stop. CURSOR STOP WRITING.
       </p>
+      <p className="text-[0.55rem] tracking-[0.08em] text-stone-400/70 font-light font-sans mt-3">
+        ~p.s. sorry this isn't edible
+      </p>
     </motion.footer>
   );
 }
