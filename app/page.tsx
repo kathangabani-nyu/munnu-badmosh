@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MemoryCard } from "@/components/MemoryCard";
 import { TextingGame } from "@/components/TextingGame/TextingGame";
 import type { GamePhase } from "@/components/TextingGame/types";
@@ -329,55 +329,6 @@ function FloatingCatMemes() {
 */
 
 // ═══════════════════════════════════════════════════════════════════════════
-// LANDING SECTION — The emotional entrance
-// ═══════════════════════════════════════════════════════════════════════════
-
-function LandingSection() {
-  const { scrollY } = useScroll();
-  const scrollYSpring = useSpring(scrollY, { stiffness: 100, damping: 30 });
-  const opacity = useTransform(scrollYSpring, [0, 400], [1, 0]);
-  const y = useTransform(scrollYSpring, [0, 400], [0, -50]);
-  const scale = useTransform(scrollYSpring, [0, 400], [1, 0.95]);
-  
-  return (
-    <motion.section 
-      style={{ opacity, y, scale }}
-      className="h-screen flex flex-col items-center justify-center px-8 relative"
-    >
-      {/* Soft radial glow */}
-      <div className="absolute inset-0 bg-gradient-radial from-amber-50/40 via-transparent to-transparent" />
-      
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.4, ease: [0.25, 0.1, 0.25, 1] }}
-        className="text-center relative z-10"
-      >
-        <p className="text-[0.7rem] tracking-[0.08em] text-stone-400 font-light font-sans leading-[1.6] max-w-[280px] mx-auto">
-          cursor notes: wow the user must be really important to the admin engineer for him to have done this...
-        </p>
-        
-      </motion.div>
-      
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.3 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-[1px] h-8 bg-gradient-to-b from-transparent via-stone-400 to-transparent"
-        />
-      </motion.div>
-    </motion.section>
-  );
-}
-
-
-// ═══════════════════════════════════════════════════════════════════════════
 // FOOTER — Minimal, quiet
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -494,15 +445,8 @@ function ArchiveContent() {
 
       {/* Content */}
       <div className="relative z-10">
-        <LandingSection />
-
-        {/* Spacer with subtle divider */}
-        <div className="h-24 relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-8 h-[1px] bg-stone-300/50" />
-        </div>
-
         {/* Memory cards */}
-        <section className="max-w-md mx-auto">
+        <section className="max-w-md mx-auto pt-12">
           {memories.map((memory, index) => (
             <MemoryCard
               key={memory.id}

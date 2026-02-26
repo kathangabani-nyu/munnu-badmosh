@@ -520,14 +520,7 @@ export const conversationData: ConversationData = {
     the_reveal: {
       id: "the_reveal",
       messages: [
-        { id: "tr1", sender: "them", text: "okay so", delay: 500, typingDuration: 600 },
-        { id: "tr2", sender: "them", text: "i made you this little archive thing", delay: 300, typingDuration: 1400 },
-        { id: "tr3", sender: "them", text: "of us", delay: 400, typingDuration: 400 },
-        { id: "tr4", sender: "them", text: "it's just some photos and videos and stuff", delay: 300, typingDuration: 1600 },
-        { id: "tr5", sender: "them", text: "probably the corniest thing i've ever done", delay: 400, typingDuration: 1600 },
-        { id: "tr6", sender: "them", text: "anyway", delay: 600, typingDuration: 500 },
-        { id: "tr7", sender: "them", text: "here", delay: 500, typingDuration: 400 },
-        { id: "tr8", sender: "them", text: "and if you don't like it just lie to me ok i'm fragile", delay: 400, typingDuration: 2200 },
+        { id: "tr1", sender: "them", text: "you already know what it is hehe :\"", delay: 500, typingDuration: 1400 },
       ],
       isEnding: true,
     },
