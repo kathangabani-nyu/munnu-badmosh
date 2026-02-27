@@ -357,16 +357,16 @@ function Footer() {
 
 function AudioController({ showToggle }: { showToggle: boolean }) {
   const bgAudioRef = useRef<HTMLAudioElement>(null);
-  const radioheadRef = useRef<HTMLAudioElement>(null);
+  const altAudioRef = useRef<HTMLAudioElement>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [radioheadPlaying, setRadioheadPlaying] = useState(false);
+  const [altPlaying, setAltPlaying] = useState(false);
 
   useEffect(() => {
     if (bgAudioRef.current) {
       bgAudioRef.current.volume = 1.0;
     }
-    if (radioheadRef.current) {
-      radioheadRef.current.volume = 1.0;
+    if (altAudioRef.current) {
+      altAudioRef.current.volume = 1.0;
     }
 
     const handleFirstInteraction = () => {
@@ -387,40 +387,40 @@ function AudioController({ showToggle }: { showToggle: boolean }) {
     };
   }, [hasInteracted]);
 
-  const toggleRadiohead = () => {
-    if (!radioheadRef.current || !bgAudioRef.current) return;
+  const toggleAlt = () => {
+    if (!altAudioRef.current || !bgAudioRef.current) return;
 
-    if (radioheadPlaying) {
-      radioheadRef.current.pause();
+    if (altPlaying) {
+      altAudioRef.current.pause();
       bgAudioRef.current.play().catch(() => {});
-      setRadioheadPlaying(false);
+      setAltPlaying(false);
     } else {
       bgAudioRef.current.pause();
-      radioheadRef.current.play().catch(() => {});
-      setRadioheadPlaying(true);
+      altAudioRef.current.play().catch(() => {});
+      setAltPlaying(true);
     }
   };
 
   return (
     <>
-      <audio ref={bgAudioRef} src="/media/Alexi Murdoch - Someday Soon.mp3" loop />
-      <audio ref={radioheadRef} src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3" loop />
+      <audio ref={bgAudioRef} src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3" loop />
+      <audio ref={altAudioRef} src="/media/Alexi Murdoch - Someday Soon.mp3" loop />
 
-      {/* Radiohead toggle — small, top-left, only visible in archive */}
+      {/* Someday Soon toggle — small, top-left, only visible in archive */}
       {showToggle && (
         <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.8 }}
-          onClick={toggleRadiohead}
+          onClick={toggleAlt}
           className="fixed top-4 left-4 z-30 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/60 border border-stone-200/50 shadow-sm backdrop-blur-sm cursor-pointer"
           style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6px)" }}
           whileTap={{ scale: 0.95 }}
         >
           <span className="text-[0.55rem] tracking-[0.08em] uppercase text-stone-500 font-light select-none">
-            weird fishes
+            someday soon
           </span>
-          <span className={`w-1.5 h-1.5 rounded-full ${radioheadPlaying ? "bg-amber-400" : "bg-stone-300"}`} />
+          <span className={`w-1.5 h-1.5 rounded-full ${altPlaying ? "bg-amber-400" : "bg-stone-300"}`} />
         </motion.button>
       )}
     </>
