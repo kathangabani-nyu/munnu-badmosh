@@ -112,10 +112,16 @@ export function TextingGame({ onComplete }: TextingGameProps) {
       className="fixed inset-0 bg-[#FAF9F7] z-40 flex flex-col"
     >
       {/* Header */}
-      <div className="pt-[env(safe-area-inset-top)] px-5 py-4 text-center border-b border-stone-200/40">
+      <div className="pt-[env(safe-area-inset-top)] px-5 py-4 text-center border-b border-stone-200/40 relative">
         <p className="text-[0.7rem] tracking-[0.15em] uppercase text-stone-400 font-light">
           messages
         </p>
+        <button
+          onClick={onComplete}
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-[0.6rem] tracking-[0.08em] text-stone-400/60 hover:text-stone-500 transition-colors font-light cursor-pointer"
+        >
+          skip &rsaquo;
+        </button>
       </div>
 
       {/* Chat area */}
