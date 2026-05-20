@@ -22,12 +22,12 @@ export function ChatBubble({ message }: ChatBubbleProps) {
     >
       <div
         className={`
-          max-w-[75%] px-4 py-2.5
+          max-w-[78%] px-3.5 py-2
           ${isUser
-            ? "bg-stone-800 text-white/90 rounded-2xl rounded-br-md"
-            : "bg-white/80 text-stone-700 rounded-2xl rounded-bl-md shadow-sm border border-stone-200/50"
+            ? "bg-[#0A84FF] text-white rounded-[1.1rem] rounded-br-sm"
+            : "bg-[#E9E9EB] text-[#1D1D1F] rounded-[1.1rem] rounded-bl-sm"
           }
-          text-[0.875rem] leading-relaxed font-sans
+          text-[0.94rem] leading-[1.35] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif]
         `}
       >
         {message.text && <p>{message.text}</p>}

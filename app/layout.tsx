@@ -18,10 +18,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#FAF9F7",
+  themeColor: "#faf9f5",
 };
 
 export default function RootLayout({
@@ -32,16 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Preload fonts for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* Apple-specific meta for iPhone 15 */}
+        {/* Fonts are bundled via next/font — no external font requests */}
+        {/* Apple-specific meta for iPhone */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="format-detection" content="telephone=no" />
       </head>
-      <body className="antialiased bg-[#FAF9F7] text-stone-800 overflow-x-hidden">
+      <body className="antialiased bg-[var(--paper-bg)] text-[var(--map-ink)] overflow-x-hidden">
         {children}
         <Analytics />
       </body>

@@ -109,16 +109,17 @@ export function TextingGame({ onComplete }: TextingGameProps) {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 bg-[#FAF9F7] z-40 flex flex-col"
+      className="fixed inset-0 bg-[#F2F2F7] z-40 flex flex-col font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif]"
     >
       {/* Header */}
-      <div className="pt-[env(safe-area-inset-top)] px-5 py-4 text-center border-b border-stone-200/40 relative">
-        <p className="text-[0.7rem] tracking-[0.15em] uppercase text-stone-400 font-light">
-          messages
+      <div className="pt-[env(safe-area-inset-top)] px-5 py-3 text-center border-b border-[#D1D1D6] relative bg-white/85 backdrop-blur-md">
+        <p className="text-[0.82rem] font-semibold text-[#1D1D1F]">
+          munna <span aria-hidden>💀</span>
         </p>
+        <p className="text-[0.68rem] text-[#8E8E93] mt-0.5">iMessage (fake)</p>
         <button
           onClick={onComplete}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-[0.6rem] tracking-[0.08em] text-stone-400/60 hover:text-stone-500 transition-colors font-light cursor-pointer"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-[0.75rem] text-[#8E8E93] hover:text-[#636366] transition-colors cursor-pointer"
         >
           skip &rsaquo;
         </button>
@@ -127,7 +128,7 @@ export function TextingGame({ onComplete }: TextingGameProps) {
       {/* Chat area */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-4"
+        className="flex-1 overflow-y-auto px-3 py-3"
         style={{ scrollBehavior: "smooth" }}
       >
         <AnimatePresence mode="popLayout">
