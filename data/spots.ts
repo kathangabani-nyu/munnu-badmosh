@@ -85,7 +85,7 @@ export const spots: SpotDefinition[] = [
     place: "brooklyn",
     catalogTag: "PIN 07",
     mapPosition: { x: 50, y: 55 },
-    photoFolder: "prospect-park",
+    photoFolder: "brooklyn",
     layout: "cluster",
     note: "peak walk-and-talk infrastructure.",
     region: "nyc",

@@ -5,17 +5,29 @@ const root = process.cwd();
 const mediaRoot = path.join(root, "public", "media");
 const outPath = path.join(root, "data", "media-index.json");
 
-const targetFolders = [
+const configuredFolders = [
   "sewell-farm",
   "hamilton-farm",
   "midtown",
   "fordham",
   "central-park",
   "greenwood",
-  "prospect-park",
+  "brooklyn",
   "home",
   "road-trip",
 ];
+
+const discoveredFolders = fs.existsSync(mediaRoot)
+  ? fs
+      .readdirSync(mediaRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .filter((name) => !name.startsWith("."))
+  : [];
+
+const targetFolders = [...new Set([...configuredFolders, ...discoveredFolders])].sort((a, b) =>
+  a.localeCompare(b)
+);
 
 const imageExt = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"]);
 const videoExt = new Set([".mp4", ".mov", ".webm", ".m4v"]);

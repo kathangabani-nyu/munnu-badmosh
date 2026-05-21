@@ -18,6 +18,11 @@ export function getMediaForFolder(folder: string): MediaItem[] {
   return index.byFolder[folder] ?? [];
 }
 
+export function getAllMedia(): MediaItem[] {
+  const index = mediaIndex as MediaIndex;
+  return Object.values(index.byFolder).flat();
+}
+
 // Legacy id map kept for Doors photo snippets.
 export const mediaById: Record<string, { src: string }> = {
   "0-new": { src: "/media/WhatsApp Image 2026-02-13 at 8.00.36 PM.jpeg" },
