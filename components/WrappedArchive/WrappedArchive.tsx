@@ -1,23 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { TouchEvent, WheelEvent } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { constellationFinalLine, constellationStars } from "@/data/constellation";
-import { doors } from "@/data/doors";
+import { AnimatePresence, motion } from "framer-motion";
 import { getAllMedia, getMediaForFolder } from "@/data/media";
 import type { MediaItem } from "@/data/media";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const PAGE_COUNT = 10;
-
-const messageScript = [
-  { side: "them", text: "mudra", delay: 700 },
-  { side: "them", text: "MUDRA", delay: 1350 },
-  { side: "them", text: "i need to tell you something extremely serious", delay: 2200 },
-  { side: "me", text: "omg what happened??", delay: 3450 },
-  { side: "them", text: 'you already know what it is hehe :"', delay: 4900 },
-] as const;
+const PAGE_COUNT = 7;
 
 interface WrappedArchiveProps {
   className?: string;
@@ -160,34 +151,6 @@ function PinnedFrame({
   );
 }
 
-function Typewriter({ text, delay = 900 }: { text: string; delay?: number }) {
-  const [value, setValue] = useState("");
-
-  useEffect(() => {
-    let index = 0;
-    let interval: number | undefined;
-    const timeout = window.setTimeout(() => {
-      interval = window.setInterval(() => {
-        setValue(text.slice(0, index + 1));
-        index += 1;
-        if (index >= text.length && interval) window.clearInterval(interval);
-      }, 55);
-    }, delay);
-
-    return () => {
-      window.clearTimeout(timeout);
-      if (interval) window.clearInterval(interval);
-    };
-  }, [delay, text]);
-
-  return (
-    <>
-      {value}
-      {value.length < text.length && <span className="wrapped-cursor" aria-hidden />}
-    </>
-  );
-}
-
 function ColdOpen() {
   return (
     <div className="wrapped-page-inner wrapped-cold">
@@ -201,76 +164,9 @@ function ColdOpen() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.92, duration: 0.7, ease: EASE }}
       >
-        i&apos;m taking you somewhere.
+        Cody + May
       </motion.p>
       <SwipeHint delay={1.65} />
-    </div>
-  );
-}
-
-function TextingTrailer() {
-  const [messages, setMessages] = useState<Array<(typeof messageScript)[number]>>([]);
-  const [typing, setTyping] = useState(false);
-
-  useEffect(() => {
-    const timers: number[] = [];
-    messageScript.forEach((message) => {
-      if (message.side === "them") {
-        timers.push(window.setTimeout(() => setTyping(true), Math.max(0, message.delay - 500)));
-      }
-      timers.push(
-        window.setTimeout(() => {
-          setTyping(false);
-          setMessages((current) => [...current, message]);
-        }, message.delay)
-      );
-    });
-
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
-  }, []);
-
-  return (
-    <div className="wrapped-page-inner wrapped-imessage-page">
-      <PaperTexture wash={false} />
-      <div className="wrapped-imessage-header">
-        <div className="wrapped-dynamic-island" aria-hidden />
-        <p>munna {"\u{1F480}"}</p>
-        <span>iMessage (fake)</span>
-      </div>
-
-      <div className="wrapped-imessage-chat">
-        {messages.map((message, index) => (
-          <motion.div
-            key={`${message.text}-${index}`}
-            className={`wrapped-imessage-row ${message.side}`}
-            initial={{ y: 12, opacity: 0, scale: 0.96 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: EASE }}
-          >
-            <div className={`wrapped-bubble ${message.side}`}>
-              <p>{message.text}</p>
-            </div>
-          </motion.div>
-        ))}
-
-        <AnimatePresence>
-          {typing && (
-            <motion.div
-              className="wrapped-imessage-row them"
-              initial={{ y: 8, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 4, opacity: 0 }}
-            >
-              <div className="wrapped-typing" aria-label="typing">
-                <i />
-                <i />
-                <i />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-      <SwipeHint delay={6.1} />
     </div>
   );
 }
@@ -332,7 +228,7 @@ function MapReveal() {
       </motion.svg>
 
       <div className="wrapped-map-title">
-        <WordStack words={["one", "last", "walk."]} />
+        <WordStack words={["our", "route."]} />
       </div>
       <SwipeHint delay={1.85} />
     </div>
@@ -347,7 +243,7 @@ function SpotIntro({
 }: {
   tag: string;
   name: string;
-  note: string;
+  note?: string;
   light?: boolean;
 }) {
   return (
@@ -369,14 +265,16 @@ function SpotIntro({
           {name}
         </motion.h2>
       </span>
-      <motion.p
-        className="wrapped-hand-note"
-        initial={{ y: 16, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.56, duration: 0.6, ease: EASE }}
-      >
-        {note}
-      </motion.p>
+      {note && (
+        <motion.p
+          className="wrapped-hand-note"
+          initial={{ y: 16, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.56, duration: 0.6, ease: EASE }}
+        >
+          {note}
+        </motion.p>
+      )}
     </div>
   );
 }
@@ -385,7 +283,7 @@ function SewellPage({ media }: { media: MediaItem[] }) {
   return (
     <div className="wrapped-page-inner wrapped-scatter-page">
       <PaperTexture />
-      <SpotIntro tag="PIN 01 · sewell, nj" name="hidden hills farm" note="the original goat summit." />
+      <SpotIntro tag="PIN 01 · sewell, nj" name="hidden hills farm" />
       <div className="wrapped-scatter-grid">
         <PinnedFrame media={media[0]} rotation={-2.2} delay={0.64} />
         <PinnedFrame media={media[1]} rotation={1.6} delay={0.76} className="wrapped-lower" />
@@ -411,7 +309,7 @@ function MidtownPage({ media }: { media?: MediaItem }) {
       </motion.div>
       <div className="wrapped-photo-scrim" aria-hidden />
       <div className="wrapped-photo-caption">
-        <SpotIntro tag="PIN 03 · manhattan" name="midtown" note="civilian behavior was not observed." light />
+        <SpotIntro tag="PIN 03 · manhattan" name="midtown" light />
       </div>
       <SwipeHint dark delay={1.55} />
     </div>
@@ -449,20 +347,12 @@ function CentralPage({ media }: { media?: MediaItem }) {
       >
         <MediaAsset media={media} className="wrapped-pan-media" />
       </motion.div>
-      <motion.p
-        className="wrapped-opposing-note"
-        initial={{ y: 14, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.7, duration: 0.7, ease: EASE }}
-      >
-        run club but make it unserious.
-      </motion.p>
       <SwipeHint delay={1.5} />
     </div>
   );
 }
 
-function ProspectPage({ media }: { media: MediaItem[] }) {
+function BrooklynPage({ media }: { media: MediaItem[] }) {
   return (
     <div className="wrapped-page-inner wrapped-cluster-page">
       <PaperTexture />
@@ -475,12 +365,9 @@ function ProspectPage({ media }: { media: MediaItem[] }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.28, duration: 0.65, ease: EASE }}
         >
-          prospect park
+          brooklyn
         </motion.h2>
       </span>
-      <motion.p className="wrapped-hand-note" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-        peak walk-and-talk infrastructure.
-      </motion.p>
       <div className="wrapped-cluster-grid">
         {media.map((item, index) => (
           <motion.div
@@ -525,267 +412,8 @@ function HomePage({ media }: { media?: MediaItem }) {
             51 church ave
           </motion.h2>
         </span>
-        <p className="wrapped-hand-note light">
-          <Typewriter text="church ave forever loading." delay={1080} />
-        </p>
       </div>
       <SwipeHint dark delay={2.35} />
-    </div>
-  );
-}
-
-function DoorsPage() {
-  const [openDoorId, setOpenDoorId] = useState<string | null>(null);
-  const activeDoor = doors.find((door) => door.id === openDoorId) ?? null;
-
-  return (
-    <div className="wrapped-page-inner wrapped-doors-page">
-      <PaperTexture />
-      <div className="wrapped-doors-content">
-        <span className="wrapped-word-window">
-          <motion.h2
-            initial={{ y: 88, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.7, ease: EASE }}
-          >
-            open when ___
-          </motion.h2>
-        </span>
-        <motion.p
-          className="wrapped-kicker wrapped-doors-sub"
-          initial={{ y: 22, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.42, duration: 0.6, ease: EASE }}
-        >
-          six emergency protocols. none scientifically validated.
-        </motion.p>
-        <div className="wrapped-door-list">
-          {doors.map((door, index) => (
-            <motion.button
-              key={door.id}
-              type="button"
-              className="wrapped-door-row"
-              onClick={() => setOpenDoorId(door.id)}
-              initial={{ y: 34, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.54 + index * 0.08, duration: 0.5, ease: EASE }}
-            >
-              <span className="wrapped-door-glyph" aria-hidden>
-                {door.glyph}
-              </span>
-              <span>{door.label}</span>
-              <i aria-hidden>→</i>
-            </motion.button>
-          ))}
-        </div>
-      </div>
-
-      <motion.div
-        className="wrapped-door-dock"
-        initial={{ y: 44, scale: 0.8, opacity: 0 }}
-        animate={{ y: 0, scale: 1, opacity: 1 }}
-        transition={{ delay: 1.16, duration: 0.65, ease: EASE }}
-      >
-        {doors.map((door) => (
-          <button key={door.id} type="button" title={door.label} onClick={() => setOpenDoorId(door.id)}>
-            {door.glyph}
-          </button>
-        ))}
-      </motion.div>
-
-      <AnimatePresence>
-        {activeDoor && (
-          <motion.div
-            className="wrapped-door-scrim"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setOpenDoorId(null)}
-          >
-            <motion.div
-              className="wrapped-door-modal"
-              initial={{ y: 18, opacity: 0.5 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 16, opacity: 0 }}
-              transition={{ duration: 0.32, ease: EASE }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <p className="wrapped-kicker">{activeDoor.label}</p>
-              <h3>{activeDoor.title}</h3>
-              <p>{activeDoor.body}</p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <SwipeHint delay={1.8} />
-    </div>
-  );
-}
-
-function ConstellationBox() {
-  const [litStars, setLitStars] = useState<string[]>([]);
-  const allLit = litStars.length === constellationStars.length;
-  const litSet = new Set(litStars);
-  const points = constellationStars.map((star) => `${star.x},${star.y}`).join(" ");
-
-  return (
-    <motion.div
-      className="wrapped-constellation"
-      initial={{ y: 22, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, ease: EASE }}
-    >
-      <p>constellation protocol</p>
-      <div className="wrapped-star-field">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-          {allLit && (
-            <motion.polyline
-              points={points}
-              fill="none"
-              stroke="rgba(200,71,43,.72)"
-              strokeWidth="0.8"
-              vectorEffect="non-scaling-stroke"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: EASE }}
-            />
-          )}
-        </svg>
-        {constellationStars.map((star) => {
-          const lit = litSet.has(star.id);
-          return (
-            <button
-              key={star.id}
-              type="button"
-              className={`wrapped-star ${lit ? "lit" : ""}`}
-              style={{ left: `${star.x}%`, top: `${star.y}%` }}
-              onClick={() => {
-                if (!lit) setLitStars((current) => [...current, star.id]);
-              }}
-              aria-label={star.label}
-            >
-              <span />
-            </button>
-          );
-        })}
-      </div>
-      <div className="wrapped-star-lines">
-        {litStars.map((id) => {
-          const star = constellationStars.find((item) => item.id === id);
-          return star ? <p key={id}>· {star.line}</p> : null;
-        })}
-      </div>
-      {allLit && <p className="wrapped-final-line">{constellationFinalLine}</p>}
-    </motion.div>
-  );
-}
-
-function EnvelopePage() {
-  const reduceMotion = useReducedMotion();
-  const holdTimerRef = useRef<number | null>(null);
-  const [holding, setHolding] = useState(false);
-  const [opened, setOpened] = useState(false);
-
-  const clearHold = useCallback(() => {
-    if (holdTimerRef.current) {
-      window.clearTimeout(holdTimerRef.current);
-      holdTimerRef.current = null;
-    }
-  }, []);
-
-  const startHold = useCallback(() => {
-    if (opened) return;
-    clearHold();
-    setHolding(true);
-    holdTimerRef.current = window.setTimeout(() => {
-      setHolding(false);
-      setOpened(true);
-    }, 1200);
-  }, [clearHold, opened]);
-
-  const endHold = useCallback(() => {
-    clearHold();
-    setHolding(false);
-  }, [clearHold]);
-
-  useEffect(() => clearHold, [clearHold]);
-
-  return (
-    <div className="wrapped-page-inner wrapped-envelope-page">
-      <PaperTexture />
-      <motion.p className="wrapped-kicker" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.14 }}>
-        module 03 · sealed
-      </motion.p>
-      <motion.p
-        className="wrapped-envelope-warning"
-        initial={{ y: 18, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.26, duration: 0.6, ease: EASE }}
-      >
-        don&apos;t open until june 17. i mean it. munna jhaalim i can see you trying.
-      </motion.p>
-
-      <motion.button
-        type="button"
-        className="wrapped-envelope-button"
-        onPointerDown={startHold}
-        onPointerUp={endHold}
-        onPointerLeave={endHold}
-        onPointerCancel={endHold}
-        aria-label={opened ? "constellation unlocked" : "tap and hold to crack"}
-        animate={
-          opened || holding || reduceMotion
-            ? {}
-            : { rotate: [0, -2.5, 2.5, 0], y: [0, -2, 0] }
-        }
-        transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
-      >
-        <motion.svg
-          viewBox="0 0 400 280"
-          aria-hidden
-          animate={holding && !opened ? { scale: [0.975, 1.012, 0.975] } : { scale: 1 }}
-          transition={{ repeat: holding && !opened ? Infinity : 0, duration: 0.12 }}
-        >
-          <defs>
-            <linearGradient id="wrappedEnvPaper" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#fdfbf7" />
-              <stop offset="100%" stopColor="#f3ebe0" />
-            </linearGradient>
-          </defs>
-          <rect x="40" y="96" width="320" height="160" rx="6" fill="url(#wrappedEnvPaper)" stroke="rgba(31,29,26,.1)" />
-          <motion.path
-            d="M 40 96 L 200 190 L 360 96"
-            fill="rgba(250,249,245,.85)"
-            stroke="rgba(31,29,26,.1)"
-            animate={{ opacity: opened ? 0.2 : 1 }}
-            transition={{ duration: 0.55, ease: EASE }}
-          />
-          <motion.path
-            d="M 40 96 L 200 190 L 360 96 L 40 96 Z"
-            fill="rgba(250,249,245,.55)"
-            animate={{ opacity: opened ? 0.2 : 1 }}
-            transition={{ duration: 0.55, ease: EASE }}
-          />
-          <motion.g
-            style={{ transformOrigin: "200px 175px" }}
-            animate={opened ? { rotate: -18, x: -10, opacity: 0.75 } : { rotate: 0, x: 0, opacity: 1 }}
-            transition={{ duration: 0.45, ease: EASE }}
-          >
-            <circle cx="200" cy="175" r="26" fill="#c8472b" opacity=".92" />
-            <circle cx="200" cy="175" r="26" fill="none" stroke="rgba(0,0,0,.12)" />
-            <text x="200" y="182" textAnchor="middle" fill="#fdf6f0" fontFamily="JetBrains Mono, monospace" fontSize="13" letterSpacing=".08em">
-              M
-            </text>
-          </motion.g>
-          <motion.g initial={{ opacity: 0 }} animate={{ opacity: opened ? 1 : 0 }}>
-            <line x1="200" y1="175" x2="170" y2="200" stroke="rgba(255,255,255,.55)" strokeWidth="2" strokeLinecap="round" />
-            <line x1="200" y1="175" x2="230" y2="200" stroke="rgba(255,255,255,.55)" strokeWidth="2" strokeLinecap="round" />
-          </motion.g>
-        </motion.svg>
-      </motion.button>
-
-      <p className="wrapped-envelope-state">{opened ? "constellation unlocked" : holding ? "hold..." : "tap and hold to crack"}</p>
-      <AnimatePresence>{opened && <ConstellationBox />}</AnimatePresence>
     </div>
   );
 }
@@ -823,7 +451,7 @@ export function WrappedArchive({ className = "" }: WrappedArchiveProps) {
         sewell: pickMedia("sewell-farm", 4, ["home", "midtown"]),
         midtown: midtown[2] ?? midtown[0],
         central: pickMedia("central-park", 1, ["midtown", "brooklyn"])[0],
-        prospect: pickMedia("brooklyn", 6, ["home", "cute photos of her"]),
+        brooklyn: pickMedia("brooklyn", 6, ["home", "cute photos of her"]),
         home: pickMedia("home", 1, ["brooklyn"])[0],
       };
     },
@@ -851,7 +479,7 @@ export function WrappedArchive({ className = "" }: WrappedArchiveProps) {
       startAudio();
       setDirection(nextPage > currentPage ? 1 : -1);
       busyRef.current = true;
-      if ([1, 4, 7].includes(nextPage)) pulseFlash();
+      if ([1, 3, 6].includes(nextPage)) pulseFlash();
       setCurrentPage(nextPage);
 
       if (releaseTimerRef.current) window.clearTimeout(releaseTimerRef.current);
@@ -901,29 +529,26 @@ export function WrappedArchive({ className = "" }: WrappedArchiveProps) {
       case 0:
         return <ColdOpen />;
       case 1:
-        return <TextingTrailer />;
-      case 2:
         return <MapReveal />;
-      case 3:
+      case 2:
         return <SewellPage media={media.sewell} />;
-      case 4:
+      case 3:
         return <MidtownPage media={media.midtown} />;
-      case 5:
+      case 4:
         return <CentralPage media={media.central} />;
-      case 6:
-        return <ProspectPage media={media.prospect} />;
-      case 7:
-        return <HomePage media={media.home} />;
-      case 8:
-        return <DoorsPage />;
+      case 5:
+        return <BrooklynPage media={media.brooklyn} />;
       default:
-        return <EnvelopePage />;
+        return <HomePage media={media.home} />;
     }
   };
 
   return (
     <main className={`wrapped-shell ${className}`}>
       <audio ref={audioRef} src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3" loop preload="auto" />
+      <Link href="/imessage" className="wrapped-game-link" aria-label="open iMessage game">
+        texts
+      </Link>
       <div
         className="wrapped-stage"
         onWheel={handleWheel}

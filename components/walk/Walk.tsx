@@ -5,8 +5,6 @@ import { motion, useMotionValueEvent, useTransform } from "framer-motion";
 import { spots } from "@/data/spots";
 import { CinematicMap } from "./CinematicMap";
 import { Spot } from "./Spot";
-import { Doors } from "./Doors";
-import { SealedEnvelope } from "./SealedEnvelope";
 import { useScrollCamera, getSpotBands } from "./useScrollCamera";
 import { useHaptics } from "./useHaptics";
 
@@ -53,12 +51,6 @@ export function Walk() {
           <Spot key={spot.id} spot={spot} index={index} />
         ))}
       </div>
-
-      {/* CH N+1 — open when ___ */}
-      <Doors />
-
-      {/* CH N+2 — sealed envelope game */}
-      <SealedEnvelope />
     </div>
   );
 }

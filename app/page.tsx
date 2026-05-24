@@ -1,5 +1,5 @@
 import { Caveat, Fraunces, Inter, JetBrains_Mono } from "next/font/google";
-import { WrappedArchive } from "@/components/WrappedArchive/WrappedArchive";
+import { CosmicArchive } from "@/components/CosmicArchive/CosmicArchive";
 
 const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat", weight: ["500", "700"] });
 const fraunces = Fraunces({
@@ -12,5 +12,5 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", weight: ["40
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", weight: ["400", "500"] });
 
 export default function MemoryArchive() {
-  return <WrappedArchive className={`${caveat.variable} ${fraunces.variable} ${inter.variable} ${mono.variable}`} />;
+  return <CosmicArchive className={`${caveat.variable} ${fraunces.variable} ${inter.variable} ${mono.variable}`} />;
 }

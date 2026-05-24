@@ -394,6 +394,7 @@ export const conversationData: ConversationData = {
       id: "rigged_response",
       messages: [
         { id: "rr1", sender: "them", text: "wow brave choice", delay: 400, typingDuration: 800 },
+        { id: "rr-snow", sender: "them", text: "I won every snowfight", delay: 300, typingDuration: 900 },
         { id: "rr2", sender: "them", text: "really went out on a limb there", delay: 300, typingDuration: 1200 },
         { id: "rr3", sender: "them", attachment: { type: "meme", src: MEMES.meme4 }, delay: 400, typingDuration: 500 },
       ],

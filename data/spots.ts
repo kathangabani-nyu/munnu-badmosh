@@ -21,7 +21,7 @@ export const spots: SpotDefinition[] = [
     mapPosition: { x: 25, y: 61 },
     photoFolder: "sewell-farm",
     layout: "scatter",
-    note: "the original goat summit.",
+    note: "",
     region: "nj",
   },
   {
@@ -32,7 +32,7 @@ export const spots: SpotDefinition[] = [
     mapPosition: { x: 29, y: 50 },
     photoFolder: "hamilton-farm",
     layout: "cluster",
-    note: "multiple animals. zero supervision.",
+    note: "",
     region: "nj",
   },
   {
@@ -43,7 +43,7 @@ export const spots: SpotDefinition[] = [
     mapPosition: { x: 45, y: 40 },
     photoFolder: "midtown",
     layout: "hero",
-    note: "civilian behavior was not observed.",
+    note: "",
     region: "nyc",
   },
   {
@@ -54,7 +54,7 @@ export const spots: SpotDefinition[] = [
     mapPosition: { x: 44, y: 38 },
     photoFolder: "fordham",
     layout: "annotated",
-    note: "campus looked calm. we did not.",
+    note: "",
     region: "nyc",
   },
   {
@@ -65,7 +65,7 @@ export const spots: SpotDefinition[] = [
     mapPosition: { x: 46, y: 33 },
     photoFolder: "central-park",
     layout: "cinematic",
-    note: "run club but make it unserious.",
+    note: "",
     region: "nyc",
   },
   {
@@ -76,18 +76,18 @@ export const spots: SpotDefinition[] = [
     mapPosition: { x: 49, y: 57 },
     photoFolder: "greenwood",
     layout: "scatter",
-    note: "respectful-ish shenanigans.",
+    note: "",
     region: "nyc",
   },
   {
-    id: "prospect-park",
-    name: "prospect park",
+    id: "brooklyn",
+    name: "brooklyn",
     place: "brooklyn",
     catalogTag: "PIN 07",
     mapPosition: { x: 50, y: 55 },
     photoFolder: "brooklyn",
     layout: "cluster",
-    note: "peak walk-and-talk infrastructure.",
+    note: "",
     region: "nyc",
   },
   {
@@ -98,7 +98,7 @@ export const spots: SpotDefinition[] = [
     mapPosition: { x: 52, y: 60 },
     photoFolder: "home",
     layout: "hero",
-    note: "church ave forever loading.",
+    note: "",
     region: "nyc",
   },
   {
@@ -109,7 +109,7 @@ export const spots: SpotDefinition[] = [
     mapPosition: { x: 10, y: 31 },
     photoFolder: "road-trip",
     layout: "cinematic",
-    note: "~613 miles. don't be a stranger or i swear.",
+    note: "",
     region: "mi",
   },
 ];
