@@ -45,6 +45,24 @@ interface Burst {
   color: string;
 }
 
+interface TransitionShard {
+  id: number;
+  x: number;
+  y: number;
+  dx: number;
+  dy: number;
+  size: number;
+  rotate: number;
+  delay: number;
+  color: string;
+}
+
+interface TransitionBurstState {
+  id: number;
+  direction: number;
+  shards: TransitionShard[];
+}
+
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
@@ -87,6 +105,23 @@ function pickMedia(folder: string, count: number, fallbacks: string[] = []) {
   return Array.from({ length: count }, (_, index) => pool[index % pool.length]);
 }
 
+function uniqueMedia(items: MediaItem[]) {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    if (seen.has(item.src)) return false;
+    seen.add(item.src);
+    return true;
+  });
+}
+
+function realPhotoPool() {
+  return uniqueMedia(
+    usableMedia(getAllMedia()).filter(
+      (item) => item.type === "photo" && !item.id.startsWith("animation template images-")
+    )
+  );
+}
+
 function MediaAsset({
   media,
   className,
@@ -113,6 +148,71 @@ function MediaAsset({
   }
 
   return <img src={media.src} alt="" className={className} loading={eager ? "eager" : "lazy"} />;
+}
+
+function createTransitionBurst(direction: number): TransitionBurstState {
+  const shards = Array.from({ length: 42 }, (_, index) => {
+    const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.65 + (direction < 0 ? Math.PI : 0);
+    const distance = 160 + Math.random() * 360;
+    return {
+      id: index,
+      x: 46 + Math.random() * 8,
+      y: direction > 0 ? 76 + Math.random() * 8 : 18 + Math.random() * 8,
+      dx: Math.cos(angle) * distance,
+      dy: Math.sin(angle) * distance,
+      size: 2 + Math.random() * 8,
+      rotate: (Math.random() - 0.5) * 220,
+      delay: Math.random() * 0.11,
+      color: Math.random() > 0.74 ? "#FF6319" : Math.random() > 0.5 ? "#ffffff" : "#bfd2ff",
+    };
+  });
+
+  return { id: Date.now(), direction, shards };
+}
+
+function TransitionBurst({ burst }: { burst: TransitionBurstState }) {
+  return (
+    <motion.div
+      key={burst.id}
+      className="cosmic-transition-burst"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.18 }}
+      aria-hidden
+    >
+      <motion.div
+        className="cosmic-transition-flash"
+        initial={{ opacity: 0, scale: 0.25 }}
+        animate={{ opacity: [0, 0.95, 0], scale: [0.25, 1.8, 2.7] }}
+        transition={{ duration: 0.82, ease: EASE }}
+      />
+      {burst.shards.map((shard) => (
+        <motion.i
+          key={shard.id}
+          className="cosmic-transition-shard"
+          style={{
+            left: `${shard.x}%`,
+            top: `${shard.y}%`,
+            width: shard.size,
+            height: shard.size,
+            background: shard.color,
+            boxShadow: `0 0 ${10 + shard.size * 2}px ${shard.color}`,
+          }}
+          initial={{ x: 0, y: 0, opacity: 0, scale: 0.2, rotate: 0, filter: "blur(0px)" }}
+          animate={{
+            x: shard.dx,
+            y: shard.dy,
+            opacity: [0, 1, 0],
+            scale: [0.2, 1.25, 0.45],
+            rotate: shard.rotate,
+            filter: ["blur(0px)", "blur(0px)", "blur(4px)"],
+          }}
+          transition={{ delay: shard.delay, duration: 0.92, ease: EASE }}
+        />
+      ))}
+    </motion.div>
+  );
 }
 
 function MayFigure({ className = "" }: { className?: string }) {
@@ -476,9 +576,20 @@ function HeroScene() {
   );
 }
 
-function FTrainScene() {
+function FTrainScene({ media }: { media: MediaItem[] }) {
   return (
     <div className="cosmic-visual-scene cosmic-ftrain-scene" aria-label="brooklyn f train constellation">
+      {media.slice(0, 3).map((item, index) => (
+        <motion.div
+          key={`${item.src}-${index}`}
+          className={`cosmic-route-photo cosmic-route-photo-${index}`}
+          initial={{ opacity: 0, scale: 0.72, y: 22, rotate: index % 2 ? 8 : -8 }}
+          animate={{ opacity: 1, scale: 1, y: 0, rotate: index % 2 ? 3 : -3 }}
+          transition={{ delay: 0.2 + index * 0.15, duration: 0.76, ease: EASE }}
+        >
+          <MediaAsset media={item} className="cosmic-photo-fill" />
+        </motion.div>
+      ))}
       <motion.svg
         viewBox="0 0 393 852"
         preserveAspectRatio="xMidYMid slice"
@@ -515,6 +626,25 @@ function FTrainScene() {
           animate={{ pathLength: 1 }}
           transition={{ duration: 1.7, ease: EASE }}
         />
+        <motion.g
+          className="cosmic-ftrain-constellation"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.85, duration: 0.9, ease: EASE }}
+        >
+          <path d="M 55 180 L 114 272 L 204 248 L 278 354 L 325 506 L 224 632 L 110 718" fill="none" stroke="rgba(255,255,255,.48)" strokeWidth="1.2" />
+          {[
+            { x: 55, y: 180, r: 3.2 },
+            { x: 114, y: 272, r: 2.4 },
+            { x: 204, y: 248, r: 3.8 },
+            { x: 278, y: 354, r: 2.8 },
+            { x: 325, y: 506, r: 4.4 },
+            { x: 224, y: 632, r: 2.6 },
+            { x: 110, y: 718, r: 3.4 },
+          ].map((star) => (
+            <circle key={`${star.x}-${star.y}`} cx={star.x} cy={star.y} r={star.r} fill="rgba(255,255,255,.94)" />
+          ))}
+        </motion.g>
         <motion.path
           d="M 78 760 C 105 682 126 610 158 522 C 188 438 210 380 230 303 C 247 236 254 168 260 92"
           fill="none"
@@ -563,6 +693,8 @@ function FTrainScene() {
 }
 
 function MemoryScene({ media }: { media: MediaItem[] }) {
+  const orbiting = media.slice(1);
+
   return (
     <div className="cosmic-visual-scene cosmic-memory-scene" aria-label="photo orbit">
       <motion.div
@@ -573,6 +705,34 @@ function MemoryScene({ media }: { media: MediaItem[] }) {
       >
         <MediaAsset media={media[0]} className="cosmic-photo-fill" eager />
       </motion.div>
+      <div className="cosmic-all-photo-constellation" aria-label="all photo constellation">
+        {orbiting.map((item, index) => {
+          const angle = index * 137.508;
+          const ring = index % 4;
+          const radiusX = 23 + ring * 7 + (index % 3) * 2.5;
+          const radiusY = 19 + ring * 8 + (index % 5) * 1.7;
+          const left = 50 + Math.cos((angle * Math.PI) / 180) * radiusX;
+          const top = 50 + Math.sin((angle * Math.PI) / 180) * radiusY;
+          return (
+            <motion.div
+              key={`${item.src}-${index}`}
+              className="cosmic-all-photo"
+              style={
+                {
+                  left: `${clamp(left, 4, 88)}%`,
+                  top: `${clamp(top, 7, 87)}%`,
+                  "--photo-size": `${42 + (index % 5) * 7}px`,
+                } as CSSProperties
+              }
+              initial={{ opacity: 0, scale: 0.3, rotate: index % 2 ? 12 : -12 }}
+              animate={{ opacity: 1, scale: 1, rotate: (index % 7) - 3 }}
+              transition={{ delay: 0.12 + index * 0.018, duration: 0.54, ease: EASE }}
+            >
+              <MediaAsset media={item} className="cosmic-photo-fill" />
+            </motion.div>
+          );
+        })}
+      </div>
       {media.slice(1, 4).map((item, index) => (
         <motion.div
           key={`${item.src}-${index}`}
@@ -691,20 +851,53 @@ function FinalScene() {
 
 export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const chimeRef = useRef<AudioContext | null>(null);
   const touchStartY = useRef(0);
   const busyRef = useRef(false);
   const releaseTimerRef = useRef<number | null>(null);
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(1);
   const [audioStarted, setAudioStarted] = useState(false);
+  const [transitionBurst, setTransitionBurst] = useState<TransitionBurstState | null>(null);
   const reducedMotion = useReducedMotionPreference();
 
   const media = useMemo(
     () => ({
-      orbit: pickMedia("animation template images", 4, ["brooklyn", "home", "cute photos of her"]),
+      route: pickMedia("brooklyn", 3, ["home", "midtown", "cute photos of her"]),
+      orbit: realPhotoPool(),
     }),
     []
   );
+
+  const playTransitionChime = useCallback((nextDirection: number) => {
+    if (reducedMotion || typeof window === "undefined") return;
+    const AudioCtor = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtor) return;
+
+    const ctx = chimeRef.current ?? new AudioCtor();
+    chimeRef.current = ctx;
+    const now = ctx.currentTime;
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0.0001, now);
+    master.gain.exponentialRampToValueAtTime(0.055, now + 0.028);
+    master.gain.exponentialRampToValueAtTime(0.0001, now + 1.15);
+    master.connect(ctx.destination);
+
+    const notes = nextDirection > 0 ? [523.25, 659.25, 987.77] : [987.77, 659.25, 523.25];
+    notes.forEach((freq, index) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + index * 0.055);
+      gain.gain.setValueAtTime(0.0001, now + index * 0.055);
+      gain.gain.exponentialRampToValueAtTime(0.42, now + index * 0.055 + 0.035);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.86 + index * 0.04);
+      osc.connect(gain);
+      gain.connect(master);
+      osc.start(now + index * 0.055);
+      osc.stop(now + 1.05 + index * 0.04);
+    });
+  }, [reducedMotion]);
 
   const startAudio = useCallback(() => {
     if (audioStarted) return;
@@ -719,7 +912,10 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
     (nextPage: number) => {
       if (busyRef.current || nextPage < 0 || nextPage >= PAGE_COUNT || nextPage === page) return;
       startAudio();
-      setDirection(nextPage > page ? 1 : -1);
+      const nextDirection = nextPage > page ? 1 : -1;
+      setDirection(nextDirection);
+      setTransitionBurst(createTransitionBurst(nextDirection));
+      playTransitionChime(nextDirection);
       setPage(nextPage);
       busyRef.current = true;
       if (releaseTimerRef.current) window.clearTimeout(releaseTimerRef.current);
@@ -727,7 +923,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
         busyRef.current = false;
       }, reducedMotion ? 160 : 820);
     },
-    [page, reducedMotion, startAudio]
+    [page, playTransitionChime, reducedMotion, startAudio]
   );
 
   useEffect(() => {
@@ -768,7 +964,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
       case 0:
         return <HeroScene />;
       case 1:
-        return <FTrainScene />;
+        return <FTrainScene media={media.route} />;
       case 2:
         return <MemoryScene media={media.orbit} />;
       case 3:
@@ -799,6 +995,9 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
         <CosmicCanvas page={page} direction={direction} reducedMotion={reducedMotion} />
         <div className="cosmic-vignette" aria-hidden />
         <div className="cosmic-grain" aria-hidden />
+        <AnimatePresence>
+          {transitionBurst && <TransitionBurst key={transitionBurst.id} burst={transitionBurst} />}
+        </AnimatePresence>
 
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.section
