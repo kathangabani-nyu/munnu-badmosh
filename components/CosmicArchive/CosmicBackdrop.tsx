@@ -7,10 +7,12 @@ import type { CosmicStageConfig } from "./stages";
 interface CosmicBackdropProps {
   stages: CosmicStageConfig[];
   activeIndex: number;
+  direction: number;
   reducedMotion: boolean;
 }
 
-export function CosmicBackdrop({ stages, activeIndex, reducedMotion }: CosmicBackdropProps) {
+export function CosmicBackdrop({ stages, activeIndex, direction, reducedMotion }: CosmicBackdropProps) {
+  const activeDepth = stages[activeIndex]?.cameraDepth ?? 0;
   const stars = useMemo(
     () =>
       Array.from({ length: 42 }, (_, index) => ({
@@ -27,6 +29,8 @@ export function CosmicBackdrop({ stages, activeIndex, reducedMotion }: CosmicBac
     <div className="cosmic-backdrop" aria-hidden>
       {stages.map((stage, index) => {
         const active = index === activeIndex;
+        const depthDelta = stage.cameraDepth - activeDepth;
+        const activeScale = Math.max(0.92, 1.1 - activeDepth * 0.032);
         return (
           <motion.div
             key={stage.id}
@@ -37,9 +41,10 @@ export function CosmicBackdrop({ stages, activeIndex, reducedMotion }: CosmicBac
             }}
             animate={{
               opacity: active ? 1 : 0,
-              scale: active ? (reducedMotion ? 1 : 1.06) : 1.16,
+              scale: reducedMotion ? 1 : active ? activeScale : activeScale + 0.12 + depthDelta * 0.025,
+              y: reducedMotion || active ? 0 : direction > 0 ? -18 : 18,
             }}
-            transition={{ duration: reducedMotion ? 0.01 : 1.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: reducedMotion ? 0.01 : 1.22, ease: [0.16, 1, 0.3, 1] }}
           />
         );
       })}

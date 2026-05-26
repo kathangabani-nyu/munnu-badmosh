@@ -136,6 +136,8 @@ video {
   outline: none;
   isolation: isolate;
   touch-action: none;
+  perspective: 1300px;
+  --stage-accent: #ff6319;
 }
 
 .cosmic-backdrop,
@@ -166,7 +168,7 @@ video {
 
 .cosmic-backdrop-veil {
   background:
-    radial-gradient(circle at 50% 44%, transparent 0 26%, rgba(1, 1, 4, 0.34) 62%, rgba(1, 1, 4, 0.86) 100%),
+    radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--stage-accent) 16%, transparent) 0 18%, transparent 34%, rgba(1, 1, 4, 0.38) 66%, rgba(1, 1, 4, 0.86) 100%),
     linear-gradient(to bottom, rgba(1, 1, 4, 0.44), transparent 32%, rgba(1, 1, 4, 0.6));
 }
 
@@ -212,6 +214,8 @@ video {
 .cosmic-page {
   z-index: 20;
   pointer-events: none;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
 }
 
 .cosmic-stage-title {
@@ -229,7 +233,7 @@ video {
   font-size: 11px;
   letter-spacing: 0;
   text-transform: lowercase;
-  color: rgba(255, 255, 255, 0.54);
+  color: color-mix(in srgb, var(--stage-accent) 46%, rgba(255, 255, 255, 0.54));
 }
 
 .cosmic-stage-title h1 {
@@ -268,7 +272,7 @@ video {
 
 .cosmic-chat-link:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 99, 25, 0.62);
+  border-color: color-mix(in srgb, var(--stage-accent) 72%, rgba(255, 255, 255, 0.2));
   color: #fff;
 }
 
@@ -300,8 +304,8 @@ video {
 
 .cosmic-nav button.active {
   height: 28px;
-  background: #ff6319;
-  box-shadow: 0 0 22px rgba(255, 99, 25, 0.82);
+  background: var(--stage-accent);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--stage-accent) 82%, transparent);
 }
 
 .cosmic-constellation {
@@ -324,7 +328,7 @@ video {
 }
 
 .cosmic-constellation-lines line {
-  stroke: rgba(255, 255, 255, 0.5);
+  stroke: color-mix(in srgb, var(--stage-accent) 40%, rgba(255, 255, 255, 0.5));
   stroke-width: 0.085;
   vector-effect: non-scaling-stroke;
 }
@@ -343,16 +347,17 @@ video {
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.06);
   padding: 0;
-  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.52), 0 0 34px rgba(255, 255, 255, 0.06);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.52), 0 0 34px color-mix(in srgb, var(--stage-accent) 18%, transparent);
   cursor: pointer;
   pointer-events: auto;
   touch-action: manipulation;
+  will-change: transform, opacity, filter;
 }
 
 .cosmic-photo-node.hero {
   width: clamp(104px, calc(var(--node-size) * 1.08), 278px);
-  border-color: rgba(255, 255, 255, 0.34);
-  box-shadow: 0 30px 84px rgba(0, 0, 0, 0.58), 0 0 54px rgba(255, 255, 255, 0.12);
+  border-color: color-mix(in srgb, var(--stage-accent) 38%, rgba(255, 255, 255, 0.34));
+  box-shadow: 0 30px 84px rgba(0, 0, 0, 0.58), 0 0 58px color-mix(in srgb, var(--stage-accent) 26%, transparent);
 }
 
 .cosmic-photo-node.paired {
@@ -370,7 +375,7 @@ video {
 }
 
 .cosmic-photo-node:focus-visible {
-  outline: 2px solid #ff6319;
+  outline: 2px solid var(--stage-accent);
   outline-offset: 4px;
 }
 
@@ -390,31 +395,55 @@ video {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.cosmic-figure-anchor {
+.cosmic-ambient-figures {
   position: absolute;
-  z-index: 26;
+  inset: 0;
+  z-index: 24;
   pointer-events: none;
+  overflow: hidden;
+}
+
+.cosmic-ambient-figure {
+  position: absolute;
   filter: drop-shadow(0 28px 46px rgba(0, 0, 0, 0.62));
 }
 
-.cosmic-figure-anchor-earth {
-  left: 50%;
+.cosmic-ambient-codyMay {
+  right: max(58px, 7vw);
+  bottom: max(34px, 9vh);
+}
+
+.cosmic-ambient-cody {
+  left: max(22px, 4vw);
   bottom: max(28px, 8vh);
-  translate: -50% 0;
 }
 
-.cosmic-figure-anchor-us {
-  right: max(52px, 6vw);
-  bottom: max(34px, 7vh);
-  display: flex;
-  align-items: flex-end;
-  gap: 14px;
+.cosmic-ambient-may {
+  right: max(54px, 7vw);
+  top: max(116px, 22vh);
 }
 
-.cosmic-figure-anchor-final {
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
+.cosmic-ambient-figures-pair .cosmic-ambient-cody {
+  left: max(30px, 5vw);
+  bottom: max(42px, 10vh);
+}
+
+.cosmic-ambient-figures-pair .cosmic-ambient-may {
+  right: max(62px, 8vw);
+  bottom: max(96px, 16vh);
+  top: auto;
+}
+
+.cosmic-ambient-figures-split .cosmic-ambient-cody {
+  left: max(18px, 3.5vw);
+  top: max(128px, 24vh);
+  bottom: auto;
+}
+
+.cosmic-ambient-figures-split .cosmic-ambient-may {
+  right: max(58px, 7vw);
+  bottom: max(36px, 8vh);
+  top: auto;
 }
 
 .figure-photo {
@@ -444,7 +473,7 @@ video {
 
 .figure-photo-cody,
 .figure-photo-may {
-  width: clamp(92px, 12vw, 154px);
+  width: clamp(78px, 10vw, 136px);
   aspect-ratio: 3 / 4;
   border-radius: 9999px 9999px 28px 28px;
 }
@@ -458,6 +487,7 @@ video {
   background: rgba(0, 0, 0, 0.86);
   padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
   backdrop-filter: blur(18px);
+  perspective: 1200px;
 }
 
 .cosmic-lightbox-frame {
@@ -466,6 +496,14 @@ video {
   max-width: min(92vw, 1060px);
   max-height: 86dvh;
   gap: 14px;
+  transform-style: preserve-3d;
+  cursor: grab;
+  touch-action: pan-y;
+  will-change: transform, opacity, filter;
+}
+
+.cosmic-lightbox-frame:active {
+  cursor: grabbing;
 }
 
 .cosmic-lightbox-frame.paired {
@@ -479,7 +517,7 @@ video {
   object-fit: contain;
   border-radius: 20px;
   background: #050509;
-  box-shadow: 0 30px 110px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 30px 110px rgba(0, 0, 0, 0.7), 0 0 70px color-mix(in srgb, var(--stage-accent) 20%, transparent);
 }
 
 .cosmic-lightbox-close,
@@ -493,6 +531,24 @@ video {
   background: rgba(10, 10, 16, 0.62);
   color: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(14px);
+  transition: transform 0.25s var(--ease-cinematic), border-color 0.25s var(--ease-cinematic), background 0.25s var(--ease-cinematic);
+}
+
+.cosmic-lightbox-close:hover,
+.cosmic-lightbox-arrow:hover {
+  transform: translateY(-50%) scale(1.04);
+  border-color: color-mix(in srgb, var(--stage-accent) 72%, rgba(255, 255, 255, 0.16));
+  background: rgba(16, 16, 24, 0.78);
+}
+
+.cosmic-lightbox-close:hover {
+  transform: scale(1.04);
+}
+
+.cosmic-lightbox-close span,
+.cosmic-lightbox-arrow span {
+  position: relative;
+  display: block;
 }
 
 .cosmic-lightbox-close {
@@ -500,8 +556,25 @@ video {
   right: max(18px, env(safe-area-inset-right));
   width: 42px;
   height: 42px;
-  font-size: 27px;
-  line-height: 1;
+}
+
+.cosmic-lightbox-close span,
+.cosmic-lightbox-close span::after {
+  width: 16px;
+  height: 2px;
+  border-radius: 9999px;
+  background: currentColor;
+}
+
+.cosmic-lightbox-close span {
+  transform: rotate(45deg);
+}
+
+.cosmic-lightbox-close span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: rotate(90deg);
 }
 
 .cosmic-lightbox-arrow {
@@ -509,16 +582,29 @@ video {
   width: 48px;
   height: 48px;
   transform: translateY(-50%);
-  font-size: 36px;
-  line-height: 1;
+}
+
+.cosmic-lightbox-arrow span {
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid currentColor;
+  border-left: 2px solid currentColor;
 }
 
 .cosmic-lightbox-prev {
   left: max(16px, env(safe-area-inset-left));
 }
 
+.cosmic-lightbox-prev span {
+  transform: translateX(2px) rotate(-45deg);
+}
+
 .cosmic-lightbox-next {
   right: max(16px, env(safe-area-inset-right));
+}
+
+.cosmic-lightbox-next span {
+  transform: translateX(-2px) rotate(135deg);
 }
 
 @media (max-width: 720px) {
@@ -553,7 +639,7 @@ video {
   }
 
   .cosmic-photo-node {
-    width: clamp(74px, calc(var(--node-size) * 0.76), 134px);
+    width: clamp(72px, calc(var(--node-size) * 0.7), 128px);
     border-radius: 16px;
   }
 
@@ -561,19 +647,34 @@ video {
     width: clamp(96px, calc(var(--node-size) * 0.82), 154px);
   }
 
-  .cosmic-figure-anchor-us {
-    right: 44px;
-    bottom: 18px;
-    gap: 8px;
-  }
-
   .figure-photo-codyMay {
-    width: clamp(132px, 36vw, 168px);
+    width: clamp(116px, 30vw, 146px);
   }
 
   .figure-photo-cody,
   .figure-photo-may {
-    width: clamp(74px, 20vw, 94px);
+    width: clamp(58px, 16vw, 82px);
+  }
+
+  .cosmic-ambient-codyMay {
+    right: max(40px, 12vw);
+    bottom: max(20px, 6vh);
+  }
+
+  .cosmic-ambient-cody,
+  .cosmic-ambient-figures-pair .cosmic-ambient-cody,
+  .cosmic-ambient-figures-split .cosmic-ambient-cody {
+    left: max(10px, env(safe-area-inset-left));
+    top: auto;
+    bottom: max(16px, 5vh);
+  }
+
+  .cosmic-ambient-may,
+  .cosmic-ambient-figures-pair .cosmic-ambient-may,
+  .cosmic-ambient-figures-split .cosmic-ambient-may {
+    right: max(28px, env(safe-area-inset-right));
+    top: max(118px, 20vh);
+    bottom: auto;
   }
 
   .cosmic-lightbox {

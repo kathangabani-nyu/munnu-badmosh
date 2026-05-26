@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import type { ArchiveNode } from "./stages";
 import type { MediaItem } from "@/data/media";
 
@@ -31,13 +31,22 @@ function ExpandedMedia({ item }: { item: MediaItem }) {
 }
 
 export function Lightbox({ nodes, index, onIndexChange, onClose }: LightboxProps) {
-  const touchStartX = useRef(0);
+  const [direction, setDirection] = useState(1);
   const open = index !== null && nodes[index];
   const active = open ? nodes[index] : null;
 
   const go = (delta: number) => {
     if (index === null || nodes.length < 1) return;
+    setDirection(delta > 0 ? 1 : -1);
     onIndexChange((index + delta + nodes.length) % nodes.length);
+  };
+
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const enoughDistance = Math.abs(info.offset.x) > 64;
+    const enoughVelocity = Math.abs(info.velocity.x) > 430;
+    if (!enoughDistance && !enoughVelocity) return;
+
+    go(info.offset.x < 0 ? 1 : -1);
   };
 
   useEffect(() => {
@@ -67,7 +76,7 @@ export function Lightbox({ nodes, index, onIndexChange, onClose }: LightboxProps
           aria-modal="true"
         >
           <button type="button" className="cosmic-lightbox-close" onClick={onClose} aria-label="close">
-            ×
+            <span aria-hidden />
           </button>
           <button
             type="button"
@@ -78,29 +87,40 @@ export function Lightbox({ nodes, index, onIndexChange, onClose }: LightboxProps
             }}
             aria-label="previous"
           >
-            ‹
+            <span aria-hidden />
           </button>
-          <motion.div
-            key={active.id}
-            className={`cosmic-lightbox-frame ${active.items.length > 1 ? "paired" : ""}`}
-            onClick={(event) => event.stopPropagation()}
-            onTouchStart={(event) => {
-              touchStartX.current = event.touches[0]?.clientX ?? 0;
-            }}
-            onTouchEnd={(event) => {
-              const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
-              const delta = touchStartX.current - endX;
-              if (Math.abs(delta) > 42) go(delta > 0 ? 1 : -1);
-            }}
-            initial={{ y: 24, scale: 0.96, filter: "blur(12px)" }}
-            animate={{ y: 0, scale: 1, filter: "blur(0px)" }}
-            exit={{ y: -24, scale: 0.96, filter: "blur(12px)" }}
-            transition={{ duration: 0.44, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {active.items.map((item) => (
-              <ExpandedMedia key={item.src} item={item} />
-            ))}
-          </motion.div>
+          <AnimatePresence initial={false} mode="wait" custom={direction}>
+            <motion.div
+              key={active.id}
+              className={`cosmic-lightbox-frame ${active.items.length > 1 ? "paired" : ""}`}
+              onClick={(event) => event.stopPropagation()}
+              custom={direction}
+              drag="x"
+              dragElastic={0.18}
+              dragConstraints={{ left: 0, right: 0 }}
+              onDragEnd={handleDragEnd}
+              initial={{
+                x: direction > 0 ? 140 : -140,
+                rotateY: direction > 0 ? -13 : 13,
+                scale: 0.92,
+                opacity: 0,
+                filter: "blur(16px)",
+              }}
+              animate={{ x: 0, rotateY: 0, scale: 1, opacity: 1, filter: "blur(0px)" }}
+              exit={{
+                x: direction > 0 ? -140 : 140,
+                rotateY: direction > 0 ? 13 : -13,
+                scale: 0.92,
+                opacity: 0,
+                filter: "blur(16px)",
+              }}
+              transition={{ duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {active.items.map((item) => (
+                <ExpandedMedia key={item.src} item={item} />
+              ))}
+            </motion.div>
+          </AnimatePresence>
           <button
             type="button"
             className="cosmic-lightbox-arrow cosmic-lightbox-next"
@@ -110,7 +130,7 @@ export function Lightbox({ nodes, index, onIndexChange, onClose }: LightboxProps
             }}
             aria-label="next"
           >
-            ›
+            <span aria-hidden />
           </button>
         </motion.div>
       )}

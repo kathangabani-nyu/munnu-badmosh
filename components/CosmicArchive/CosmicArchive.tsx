@@ -3,13 +3,13 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { TouchEvent, WheelEvent } from "react";
+import type { CSSProperties, TouchEvent, WheelEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ConstellationScene } from "./ConstellationScene";
 import { CosmicBackdrop } from "./CosmicBackdrop";
 import { FigurePhoto } from "./FigurePhoto";
 import { Lightbox } from "./Lightbox";
-import { COSMIC_STAGES } from "./stages";
+import { COSMIC_STAGES, type CosmicStageConfig } from "./stages";
 
 const Globe = dynamic(() => import("./Globe").then((mod) => mod.Globe), { ssr: false });
 
@@ -56,51 +56,87 @@ function StageTitle({
   );
 }
 
-function StageFigures({ stageId }: { stageId: string }) {
-  if (stageId === "earth") {
-    return (
+function AmbientFigures({
+  stage,
+  reducedMotion,
+}: {
+  stage: CosmicStageConfig;
+  reducedMotion: boolean;
+}) {
+  if (stage.figureMode === "none") return null;
+
+  const float = reducedMotion
+    ? { opacity: 0.88, y: 0 }
+    : { opacity: 0.9, y: [0, -16, 0], x: [0, 7, 0], rotate: [-1, 1.5, -1] };
+  const transition = reducedMotion
+    ? { duration: 0.01 }
+    : { duration: 7.8, ease: "easeInOut", repeat: Infinity };
+
+  return (
+    <AnimatePresence mode="wait">
       <motion.div
-        className="cosmic-figure-anchor cosmic-figure-anchor-earth"
-        initial={{ opacity: 0, y: 28, scale: 0.92 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ delay: 0.25, duration: 0.78, ease: EASE }}
+        key={`${stage.id}-${stage.figureMode}`}
+        className={`cosmic-ambient-figures cosmic-ambient-figures-${stage.figureMode}`}
+        initial={{ opacity: 0, scale: 0.94 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={{ duration: reducedMotion ? 0.01 : 0.7, ease: EASE }}
         aria-hidden
       >
-        <FigurePhoto kind="codyMay" />
+        {stage.figureMode === "codyMay" ? (
+          <motion.div className="cosmic-ambient-figure cosmic-ambient-codyMay" animate={float} transition={transition}>
+            <FigurePhoto kind="codyMay" />
+          </motion.div>
+        ) : (
+          <>
+            <motion.div className="cosmic-ambient-figure cosmic-ambient-cody" animate={float} transition={transition}>
+              <FigurePhoto kind="cody" />
+            </motion.div>
+            <motion.div
+              className="cosmic-ambient-figure cosmic-ambient-may"
+              animate={reducedMotion ? float : { opacity: 0.9, y: [0, 14, 0], x: [0, -6, 0], rotate: [1, -1.5, 1] }}
+              transition={reducedMotion ? transition : { duration: 8.6, ease: "easeInOut", repeat: Infinity }}
+            >
+              <FigurePhoto kind="may" />
+            </motion.div>
+          </>
+        )}
       </motion.div>
-    );
+    </AnimatePresence>
+  );
+}
+
+function getCameraState(stage: CosmicStageConfig, direction: number, phase: "enter" | "center" | "exit", reducedMotion: boolean) {
+  if (reducedMotion) {
+    return { opacity: phase === "center" ? 1 : 0, scale: 1, y: 0, filter: "blur(0px)" };
   }
 
-  if (stageId === "milky-way") {
-    return (
-      <motion.div
-        className="cosmic-figure-anchor cosmic-figure-anchor-us"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.72, ease: EASE }}
-        aria-hidden
-      >
-        <FigurePhoto kind="cody" />
-        <FigurePhoto kind="may" />
-      </motion.div>
-    );
+  const depthScale = Math.max(0.72, 1 - stage.cameraDepth * 0.035);
+
+  if (phase === "enter") {
+    return {
+      opacity: 0,
+      scale: direction > 0 ? depthScale * 1.18 : depthScale * 0.86,
+      y: direction > 0 ? 34 : -24,
+      filter: "blur(20px)",
+    };
   }
 
-  if (stageId === "black-hole") {
-    return (
-      <motion.div
-        className="cosmic-figure-anchor cosmic-figure-anchor-final"
-        initial={{ opacity: 0, y: 24, scale: 0.9 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ delay: 0.22, duration: 0.76, ease: EASE }}
-        aria-hidden
-      >
-        <FigurePhoto kind="codyMay" />
-      </motion.div>
-    );
+  if (phase === "exit") {
+    return {
+      opacity: 0,
+      scale: direction > 0 ? depthScale * 0.78 : depthScale * 1.16,
+      y: direction > 0 ? -28 : 30,
+      filter: "blur(22px)",
+    };
   }
 
-  return null;
+  return {
+    opacity: 1,
+    scale: depthScale,
+    y: 0,
+    filter: "blur(0px)",
+  };
 }
 
 export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
@@ -173,16 +209,18 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
 
       <div
         className="cosmic-stage"
+        style={{ "--stage-accent": stage.accent } as CSSProperties}
         onWheel={handleWheel}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         tabIndex={0}
         aria-label="cosmic memory archive"
       >
-        <CosmicBackdrop stages={COSMIC_STAGES} activeIndex={page} reducedMotion={reducedMotion} />
+        <CosmicBackdrop stages={COSMIC_STAGES} activeIndex={page} direction={direction} reducedMotion={reducedMotion} />
         <Globe visible={stage.id === "earth"} reducedMotion={reducedMotion} />
         <div className="cosmic-vignette" aria-hidden />
         <div className="cosmic-grain" aria-hidden />
+        <AmbientFigures stage={stage} reducedMotion={reducedMotion} />
 
         <AnimatePresence initial={false} mode="wait">
           <StageTitle key={`${stage.id}-title`} kicker={stage.kicker} title={stage.title} reducedMotion={reducedMotion} />
@@ -193,17 +231,16 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
             key={stage.id}
             className="cosmic-page"
             custom={direction}
-            initial={{ y: direction > 0 ? 70 : -70, opacity: 0, filter: "blur(18px)" }}
-            animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-            exit={{ y: direction > 0 ? -70 : 70, opacity: 0, filter: "blur(18px)" }}
-            transition={{ duration: reducedMotion ? 0.01 : 0.72, ease: EASE }}
+            initial={getCameraState(stage, direction, "enter", reducedMotion)}
+            animate={getCameraState(stage, direction, "center", reducedMotion)}
+            exit={getCameraState(stage, direction, "exit", reducedMotion)}
+            transition={{ duration: reducedMotion ? 0.01 : 0.92, ease: EASE }}
           >
             <ConstellationScene
               stage={stage}
               reducedMotion={reducedMotion}
               onOpen={(index) => setLightboxIndex(index)}
             />
-            <StageFigures stageId={stage.id} />
           </motion.section>
         </AnimatePresence>
 
