@@ -14,7 +14,7 @@ import { COSMIC_STAGES, type CosmicStageConfig } from "./stages";
 const Globe = dynamic(() => import("./Globe").then((mod) => mod.Globe), { ssr: false });
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const CINEMATIC_TRANSITION_MS = 2300;
+const CINEMATIC_TRANSITION_MS = 1320;
 const REDUCED_TRANSITION_MS = 220;
 
 const STAR_STREAKS = Array.from({ length: 52 }, (_, index) => ({
@@ -195,12 +195,14 @@ function CinematicTransition({
   const fromStage = stages[state.from];
   const toStage = stages[state.to];
   const movingForward = state.direction > 0;
-  const touchesEarth = fromStage?.id === "earth" || toStage?.id === "earth";
+  const fromPhase = fromStage?.phaseId ?? "unknown";
+  const toPhase = toStage?.phaseId ?? "unknown";
+  const touchesEarth = fromPhase === "earth" || toPhase === "earth";
   const solarPassage =
-    (fromStage?.id === "earth" && toStage?.id === "solar") ||
-    (fromStage?.id === "solar" && toStage?.id === "earth");
-  const blackHolePassage = fromStage?.id === "nebula" || toStage?.id === "black-hole";
-  const transitionClass = `route-${fromStage?.id ?? "unknown"}-to-${toStage?.id ?? "unknown"}`;
+    (fromPhase === "earth" && toPhase === "solar-system") ||
+    (fromPhase === "solar-system" && toPhase === "earth");
+  const blackHolePassage = [fromPhase, toPhase].some((phase) => phase === "black-hole" || phase === "wormhole");
+  const transitionClass = `route-${fromPhase}-to-${toPhase}`;
   const fromBackdropDuration = solarPassage ? 1.48 : 1.16;
   const toBackdropDelay = solarPassage ? 0.72 : 0.34;
   const toBackdropScale = solarPassage ? 1.58 : blackHolePassage ? 1.7 : 1.44;
@@ -436,7 +438,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
       if (releaseTimerRef.current) clearTimeout(releaseTimerRef.current);
       releaseTimerRef.current = setTimeout(() => {
         finishCinematicTransition(transitionId);
-      }, reducedMotion ? REDUCED_TRANSITION_MS + 120 : CINEMATIC_TRANSITION_MS + 360);
+      }, reducedMotion ? REDUCED_TRANSITION_MS + 120 : CINEMATIC_TRANSITION_MS + 180);
     },
     [finishCinematicTransition, lightboxIndex, page, reducedMotion, startAudio]
   );
@@ -506,7 +508,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
         aria-label="cosmic memory archive"
       >
         <CosmicBackdrop stages={COSMIC_STAGES} activeIndex={page} direction={direction} reducedMotion={reducedMotion} />
-        <Globe visible={stage.id === "earth"} reducedMotion={reducedMotion} />
+        <Globe visible={stage.phaseId === "earth"} reducedMotion={reducedMotion} />
         <div className="cosmic-vignette" aria-hidden />
         <div className="cosmic-grain" aria-hidden />
         <CosmicHud
@@ -538,7 +540,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
               stage={stage}
               reducedMotion={reducedMotion}
               direction={direction}
-              ready={!cinematicTransition || cinematicTransition.to === page}
+              ready={!cinematicTransition}
               onOpen={(index) => setLightboxIndex(index)}
             />
           </motion.section>

@@ -226,7 +226,7 @@ video {
   top: max(28px, env(safe-area-inset-top));
   left: max(24px, env(safe-area-inset-left));
   z-index: 45;
-  max-width: min(420px, calc(100vw - 112px));
+  max-width: min(620px, calc(100vw - 112px));
   pointer-events: none;
 }
 
@@ -242,14 +242,15 @@ video {
 .cosmic-stage-title h1 {
   margin: 0;
   font-family: var(--font-fraunces), Georgia, serif;
-  font-size: clamp(34px, 5vw, 64px);
+  font-size: clamp(32px, 4.5vw, 58px);
   font-weight: 700;
-  line-height: 0.96;
+  line-height: 0.98;
   letter-spacing: 0;
   color: rgba(255, 255, 255, 0.96);
   text-shadow:
     0 18px 52px rgba(0, 0, 0, 0.55),
     0 0 calc(34px * var(--stage-glow-strength)) color-mix(in srgb, var(--stage-accent) 34%, transparent);
+  overflow-wrap: anywhere;
 }
 
 .cosmic-hud-card {
@@ -282,39 +283,6 @@ video {
 .cosmic-hud-progress > div {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), var(--stage-accent));
   box-shadow: 0 0 18px color-mix(in srgb, var(--stage-accent) 74%, transparent);
-}
-
-.cosmic-stage-chip {
-  position: absolute;
-  left: max(24px, env(safe-area-inset-left));
-  bottom: max(24px, env(safe-area-inset-bottom));
-  z-index: 72;
-  display: grid;
-  gap: 3px;
-  min-width: 124px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  background: rgba(3, 4, 12, 0.42);
-  padding: 12px 14px;
-  box-shadow: 0 20px 54px -36px rgba(0, 0, 0, 0.92);
-  backdrop-filter: blur(18px);
-}
-
-.cosmic-stage-chip span,
-.cosmic-stage-chip strong {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  text-transform: lowercase;
-}
-
-.cosmic-stage-chip span {
-  color: color-mix(in srgb, var(--stage-accent) 50%, rgba(255, 255, 255, 0.56));
-  font-size: 10px;
-}
-
-.cosmic-stage-chip strong {
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 12px;
-  font-weight: 500;
 }
 
 .cosmic-chat-link {
@@ -368,12 +336,11 @@ video {
 
 .cosmic-nav button {
   display: flex;
-  width: auto;
-  min-width: 54px;
+  width: 24px;
+  min-width: 24px;
   height: 24px;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
   border: 0;
   border-radius: 9999px;
   background: transparent;
@@ -393,27 +360,9 @@ video {
   transition: width 0.45s var(--ease-cinematic), height 0.45s var(--ease-cinematic), background 0.45s var(--ease-cinematic), box-shadow 0.45s var(--ease-cinematic);
 }
 
-.cosmic-nav-label {
-  max-width: 0;
-  overflow: hidden;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: lowercase;
-  white-space: nowrap;
-  opacity: 0;
-  transition: max-width 0.45s var(--ease-cinematic), opacity 0.28s var(--ease-cinematic);
-}
-
 .cosmic-nav button:hover,
 .cosmic-nav button.active {
   color: rgba(255, 255, 255, 0.88);
-}
-
-.cosmic-nav button:hover .cosmic-nav-label,
-.cosmic-nav button.active .cosmic-nav-label {
-  max-width: 110px;
-  opacity: 1;
 }
 
 .cosmic-nav button.active .cosmic-nav-dot {
@@ -528,8 +477,7 @@ video {
 }
 
 .cosmic-node-orbit,
-.cosmic-node-sheen,
-.cosmic-node-label {
+.cosmic-node-sheen {
   position: absolute;
   pointer-events: none;
 }
@@ -557,27 +505,6 @@ video {
   transform: translateX(22%) rotate(10deg);
 }
 
-.cosmic-node-label {
-  left: 50%;
-  bottom: -30px;
-  z-index: 5;
-  max-width: 150px;
-  translate: -50% 0;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 9999px;
-  background: rgba(3, 4, 12, 0.5);
-  padding: 5px 8px;
-  color: rgba(255, 255, 255, 0.78);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 9px;
-  line-height: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-transform: lowercase;
-  white-space: nowrap;
-  backdrop-filter: blur(12px);
-}
-
 .cosmic-cinematic-transition,
 .cosmic-transition-backdrop,
 .cosmic-camera-wake,
@@ -596,7 +523,8 @@ video {
   z-index: 84;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--stage-accent) 18%, transparent) 0 10%, transparent 34%),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--stage-accent) 12%, transparent) 0 10%, transparent 36%),
+    radial-gradient(circle at 50% 50%, transparent 0 28%, rgba(0, 0, 0, 0.62) 68%, #010104 100%),
     #010104;
   opacity: 1;
   perspective: 1200px;
@@ -641,22 +569,22 @@ video {
   aspect-ratio: 1;
   border-radius: 9999px;
   background:
-    conic-gradient(from 220deg, transparent 0 18%, color-mix(in srgb, var(--stage-accent) 42%, transparent) 24%, rgba(255, 255, 255, 0.5) 26%, transparent 34% 100%),
-    radial-gradient(circle, transparent 0 42%, rgba(255, 255, 255, 0.16) 48%, transparent 58%);
-  filter: blur(0.4px);
-  opacity: 0.74;
+    conic-gradient(from 220deg, transparent 0 18%, color-mix(in srgb, var(--stage-accent) 28%, transparent) 24%, rgba(255, 255, 255, 0.34) 26%, transparent 34% 100%),
+    radial-gradient(circle, transparent 0 39%, rgba(255, 255, 255, 0.11) 47%, transparent 60%);
+  filter: blur(0.8px);
+  opacity: 0.58;
 }
 
 .cosmic-camera-wake i {
   position: absolute;
   width: var(--ring-size);
   aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--stage-accent) 50%, rgba(255, 255, 255, 0.34));
+  border: 1px solid color-mix(in srgb, var(--stage-accent) 34%, rgba(255, 255, 255, 0.24));
   border-radius: 9999px;
   opacity: var(--ring-opacity);
   box-shadow:
-    0 0 28px color-mix(in srgb, var(--stage-accent) 28%, transparent),
-    inset 0 0 24px rgba(255, 255, 255, 0.08);
+    0 0 38px color-mix(in srgb, var(--stage-accent) 18%, transparent),
+    inset 0 0 30px rgba(255, 255, 255, 0.055);
   transform: rotateX(68deg) rotateZ(-10deg);
 }
 
@@ -670,10 +598,10 @@ video {
   translate: -50% -50%;
   border-radius: 9999px;
   background:
-    radial-gradient(circle, rgba(255, 255, 255, 0.86) 0 2px, transparent 4px 100%),
-    repeating-radial-gradient(circle, transparent 0 34px, color-mix(in srgb, var(--stage-accent) 34%, transparent) 35px 36px, transparent 38px 66px),
-    radial-gradient(circle, color-mix(in srgb, var(--stage-accent) 34%, transparent) 0 16%, rgba(255, 255, 255, 0.08) 26%, transparent 62%);
-  box-shadow: 0 0 110px color-mix(in srgb, var(--stage-accent) 28%, transparent);
+    radial-gradient(circle, rgba(255, 255, 255, 0.62) 0 1px, transparent 4px 100%),
+    repeating-radial-gradient(circle, transparent 0 38px, color-mix(in srgb, var(--stage-accent) 22%, transparent) 40px 41px, transparent 45px 74px),
+    radial-gradient(circle, color-mix(in srgb, var(--stage-accent) 22%, transparent) 0 13%, rgba(255, 255, 255, 0.06) 25%, transparent 64%);
+  box-shadow: 0 0 130px color-mix(in srgb, var(--stage-accent) 18%, transparent);
   mix-blend-mode: screen;
   will-change: transform, opacity;
 }
@@ -689,8 +617,8 @@ video {
   translate: -50% -50%;
   border-radius: 9999px;
   background:
-    linear-gradient(90deg, transparent, color-mix(in srgb, var(--stage-accent) 46%, transparent), rgba(255, 255, 255, 0.92), color-mix(in srgb, var(--stage-accent) 54%, transparent), transparent);
-  filter: blur(10px);
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--stage-accent) 26%, transparent), rgba(255, 255, 255, 0.72), color-mix(in srgb, var(--stage-accent) 30%, transparent), transparent);
+  filter: blur(14px);
   mix-blend-mode: screen;
   transform-origin: center;
   will-change: transform, opacity;
@@ -861,8 +789,8 @@ video {
 .cosmic-transition-iris {
   z-index: 8;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.86) 0 1.6%, color-mix(in srgb, var(--stage-accent) 68%, transparent) 7%, transparent 28%),
-    radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(0, 0, 0, 0.72) 68%, #010104 100%);
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.58) 0 1.4%, color-mix(in srgb, var(--stage-accent) 42%, transparent) 7%, transparent 30%),
+    radial-gradient(circle at 50% 50%, transparent 0 30%, rgba(0, 0, 0, 0.78) 68%, #010104 100%);
   mix-blend-mode: screen;
   will-change: transform, opacity;
 }
@@ -870,22 +798,24 @@ video {
 .cosmic-arrival-bloom {
   z-index: 9;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0 3%, color-mix(in srgb, var(--stage-accent) 44%, transparent) 14%, transparent 44%);
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.52) 0 3%, color-mix(in srgb, var(--stage-accent) 28%, transparent) 15%, transparent 46%);
   mix-blend-mode: screen;
   will-change: transform, opacity;
 }
 
-.cosmic-cinematic-transition.route-earth-to-solar .cosmic-match-flare,
-.cosmic-cinematic-transition.route-solar-to-earth .cosmic-match-flare {
+.cosmic-cinematic-transition.route-earth-to-solar-system .cosmic-match-flare,
+.cosmic-cinematic-transition.route-solar-system-to-earth .cosmic-match-flare {
   height: min(22vmin, 190px);
   filter: blur(14px);
 }
 
 .cosmic-cinematic-transition.route-nebula-to-black-hole .cosmic-camera-wake::before,
-.cosmic-cinematic-transition.route-black-hole-to-nebula .cosmic-camera-wake::before {
+.cosmic-cinematic-transition.route-black-hole-to-nebula .cosmic-camera-wake::before,
+.cosmic-cinematic-transition.route-black-hole-to-wormhole .cosmic-camera-wake::before,
+.cosmic-cinematic-transition.route-wormhole-to-parallel-universes .cosmic-camera-wake::before {
   background:
-    conic-gradient(from 80deg, transparent 0 14%, rgba(255, 255, 255, 0.54) 18%, color-mix(in srgb, var(--stage-accent) 48%, transparent) 28%, transparent 42% 100%),
-    radial-gradient(circle, #010104 0 16%, color-mix(in srgb, var(--stage-accent) 28%, transparent) 22%, transparent 58%);
+    conic-gradient(from 80deg, transparent 0 14%, rgba(255, 255, 255, 0.36) 18%, color-mix(in srgb, var(--stage-accent) 34%, transparent) 28%, transparent 42% 100%),
+    radial-gradient(circle, #010104 0 16%, color-mix(in srgb, var(--stage-accent) 22%, transparent) 23%, transparent 60%);
 }
 
 .figure-photo {
@@ -1141,10 +1071,6 @@ video {
     padding: 8px 10px;
   }
 
-  .cosmic-stage-chip {
-    display: none;
-  }
-
   .cosmic-nav {
     right: max(10px, env(safe-area-inset-right));
     gap: 8px;
@@ -1152,10 +1078,6 @@ video {
 
   .cosmic-nav button {
     min-width: 24px;
-  }
-
-  .cosmic-nav-label {
-    display: none;
   }
 
   .cosmic-constellation-lines {
@@ -1167,12 +1089,6 @@ video {
   .cosmic-photo-node {
     width: clamp(72px, calc(var(--node-size) * 0.7), 128px);
     border-radius: 16px;
-  }
-
-  .cosmic-node-label {
-    bottom: -24px;
-    max-width: 112px;
-    font-size: 8px;
   }
 
   .cosmic-photo-node.hero {
@@ -1237,7 +1153,6 @@ video {
   .cosmic-photo-node,
   .cosmic-node-orbit,
   .cosmic-node-sheen,
-  .cosmic-node-label,
   .cosmic-lightbox-frame,
   .cosmic-cinematic-transition,
   .cosmic-transition-backdrop,

@@ -27,7 +27,7 @@ export function StageTitle({
       exit={{ opacity: 0, y: -10, filter: "blur(8px)", transition: { duration: reducedMotion ? 0.01 : 0.16 } }}
       transition={{ duration: reducedMotion ? 0.01 : 0.68, ease: EASE }}
     >
-      <p>{kicker}</p>
+      {kicker && <p>{kicker}</p>}
       <h1>{title}</h1>
     </motion.div>
   );
@@ -54,7 +54,6 @@ function ChapterDots({
           onClick={() => onSelect(index)}
         >
           <span className="cosmic-nav-dot" aria-hidden />
-          <span className="cosmic-nav-label">{item.shortLabel}</span>
         </button>
       ))}
     </nav>
@@ -70,7 +69,6 @@ export function CosmicHud({
   activeIndex: number;
   onSelect: (index: number) => void;
 }) {
-  const activeStage = stages[activeIndex];
   const progress = stages.length > 1 ? (activeIndex / (stages.length - 1)) * 100 : 100;
 
   return (
@@ -87,11 +85,6 @@ export function CosmicHud({
           <span>Kathan - iMessage</span>
         </Link>
       </Button>
-
-      <div className="cosmic-stage-chip" aria-hidden>
-        <span>{activeStage.kicker}</span>
-        <strong>{activeStage.shortLabel}</strong>
-      </div>
 
       <ChapterDots stages={stages} activeIndex={activeIndex} onSelect={onSelect} />
     </>
