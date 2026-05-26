@@ -268,7 +268,6 @@ export const COSMIC_STAGES: CosmicStageConfig[] = [
       [
         ...singles(folders(["one where she bullied me"])),
         cutiePair,
-        ...singles(folders(["memes"])),
         ...singles(compact([topgolfPhoto])),
       ],
       nebulaLayout

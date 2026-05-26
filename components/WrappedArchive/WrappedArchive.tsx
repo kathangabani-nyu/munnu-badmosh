@@ -435,6 +435,7 @@ const pageVariants = {
 
 export function WrappedArchive({ className = "" }: WrappedArchiveProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const audioAttemptRef = useRef(false);
   const touchStartY = useRef(0);
   const busyRef = useRef(false);
   const releaseTimerRef = useRef<number | null>(null);
@@ -459,12 +460,17 @@ export function WrappedArchive({ className = "" }: WrappedArchiveProps) {
   );
 
   const startAudio = useCallback(() => {
-    if (audioStarted) return;
-    setAudioStarted(true);
-    if (audioRef.current) {
-      audioRef.current.volume = 0.82;
-      audioRef.current.play().catch(() => {});
-    }
+    if (audioStarted || audioAttemptRef.current || !audioRef.current) return;
+
+    audioRef.current.volume = 0.82;
+    audioAttemptRef.current = true;
+    audioRef.current
+      .play()
+      .then(() => setAudioStarted(true))
+      .catch(() => setAudioStarted(false))
+      .finally(() => {
+        audioAttemptRef.current = false;
+      });
   }, [audioStarted]);
 
   const pulseFlash = useCallback(() => {

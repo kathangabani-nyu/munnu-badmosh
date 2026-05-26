@@ -9,6 +9,8 @@ interface ConstellationSceneProps {
   stage: CosmicStageConfig;
   onOpen: (index: number) => void;
   reducedMotion: boolean;
+  direction: number;
+  ready: boolean;
 }
 
 function MediaPreview({ item }: { item: MediaItem }) {
@@ -43,7 +45,22 @@ function NodePreview({ node }: { node: ArchiveNode }) {
   return <MediaPreview item={node.items[0]} />;
 }
 
-export function ConstellationScene({ stage, onOpen, reducedMotion }: ConstellationSceneProps) {
+function getSwoopState(node: ArchiveNode, index: number, direction: number, reducedMotion: boolean) {
+  if (reducedMotion) return { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" };
+
+  const fromCenterX = (50 - node.x) * 7 + direction * (90 + (index % 3) * 32);
+  const fromCenterY = (50 - node.y) * 5 + (index % 2 === 0 ? 72 : -72);
+
+  return {
+    opacity: 0,
+    x: fromCenterX,
+    y: fromCenterY,
+    scale: node.hero ? 0.78 : 0.58,
+    filter: "blur(18px)",
+  };
+}
+
+export function ConstellationScene({ stage, onOpen, reducedMotion, direction, ready }: ConstellationSceneProps) {
   return (
     <div className={`cosmic-constellation cosmic-constellation-${stage.id}`}>
       <svg className="cosmic-constellation-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
@@ -57,8 +74,8 @@ export function ConstellationScene({ stage, onOpen, reducedMotion }: Constellati
               x2={node.x}
               y2={node.y}
               initial={{ opacity: 0, pathLength: 0 }}
-              animate={{ opacity: 0.22, pathLength: 1 }}
-              transition={{ delay: reducedMotion ? 0 : 0.2 + index * 0.035, duration: 0.65 }}
+              animate={ready ? { opacity: 0.22, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+              transition={{ delay: ready && !reducedMotion ? 0.22 + index * 0.035 : 0, duration: reducedMotion ? 0.01 : 0.72 }}
             />
           );
         })}
@@ -78,11 +95,11 @@ export function ConstellationScene({ stage, onOpen, reducedMotion }: Constellati
             } as CSSProperties
           }
           onClick={() => onOpen(index)}
-          initial={{ opacity: 0, scale: 0.74, filter: "blur(9px)" }}
-          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          initial={getSwoopState(node, index, direction, reducedMotion)}
+          animate={ready ? { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" } : getSwoopState(node, index, direction, reducedMotion)}
           transition={{
-            delay: reducedMotion ? 0 : 0.12 + index * 0.035,
-            duration: reducedMotion ? 0.01 : 0.72,
+            delay: ready && !reducedMotion ? 0.05 + index * 0.032 : 0,
+            duration: reducedMotion ? 0.01 : 1.08,
             ease: [0.16, 1, 0.3, 1],
           }}
           aria-label="open memory"

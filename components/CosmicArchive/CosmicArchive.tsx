@@ -14,7 +14,7 @@ import { COSMIC_STAGES, type CosmicStageConfig } from "./stages";
 const Globe = dynamic(() => import("./Globe").then((mod) => mod.Globe), { ssr: false });
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const CINEMATIC_TRANSITION_MS = 1850;
+const CINEMATIC_TRANSITION_MS = 3200;
 const REDUCED_TRANSITION_MS = 220;
 
 const STAR_STREAKS = Array.from({ length: 52 }, (_, index) => ({
@@ -25,6 +25,17 @@ const STAR_STREAKS = Array.from({ length: 52 }, (_, index) => ({
   length: 34 + (index % 7) * 16,
   rotate: -18 + (index % 8) * 5.4,
 }));
+
+const SOLAR_LINEUP = [
+  { id: "mercury", size: 18, color: "#b9a58d", glow: "rgba(220, 200, 170, 0.28)" },
+  { id: "venus", size: 30, color: "#e2b96f", glow: "rgba(255, 203, 127, 0.38)" },
+  { id: "earth", size: 32, color: "#4d93d9", glow: "rgba(127, 184, 255, 0.42)" },
+  { id: "mars", size: 24, color: "#c85d3f", glow: "rgba(255, 112, 80, 0.35)" },
+  { id: "jupiter", size: 64, color: "#caa47b", glow: "rgba(255, 202, 144, 0.34)" },
+  { id: "saturn", size: 56, color: "#d8c18a", glow: "rgba(255, 224, 152, 0.3)" },
+  { id: "uranus", size: 40, color: "#94d8e8", glow: "rgba(148, 216, 232, 0.26)" },
+  { id: "neptune", size: 38, color: "#4a71d9", glow: "rgba(90, 128, 255, 0.26)" },
+];
 
 interface CosmicArchiveProps {
   className?: string;
@@ -107,6 +118,92 @@ function getCameraState(stage: CosmicStageConfig, direction: number, phase: "ent
   };
 }
 
+function SolarSystemPassage({ movingForward }: { movingForward: boolean }) {
+  return (
+    <div className="cosmic-solar-passage">
+      <motion.i
+        className="cosmic-solar-neighbor venus"
+        initial={{
+          opacity: movingForward ? 0 : 0.1,
+          scale: movingForward ? 1.72 : 0.34,
+          x: movingForward ? -22 : -320,
+          y: movingForward ? 18 : -28,
+          filter: movingForward ? "blur(12px)" : "blur(18px)",
+        }}
+        animate={{
+          opacity: movingForward ? [0, 0.9, 0.84, 0] : [0, 0.62, 0.9, 0],
+          scale: movingForward ? [1.72, 1.18, 0.64, 0.28] : [0.28, 0.64, 1.18, 1.72],
+          x: movingForward ? [-22, -118, -238, -360] : [-360, -238, -118, -22],
+          y: movingForward ? [18, -4, -18, -30] : [-30, -18, -4, 18],
+          filter: ["blur(12px)", "blur(1px)", "blur(2px)", "blur(18px)"],
+        }}
+        transition={{ delay: 0.18, duration: 1.76, ease: EASE }}
+      />
+      <motion.i
+        className="cosmic-solar-neighbor mars"
+        initial={{
+          opacity: movingForward ? 0 : 0.1,
+          scale: movingForward ? 1.52 : 0.3,
+          x: movingForward ? 34 : 340,
+          y: movingForward ? 30 : 84,
+          filter: movingForward ? "blur(12px)" : "blur(18px)",
+        }}
+        animate={{
+          opacity: movingForward ? [0, 0.86, 0.82, 0] : [0, 0.58, 0.86, 0],
+          scale: movingForward ? [1.52, 1.05, 0.58, 0.26] : [0.26, 0.58, 1.05, 1.52],
+          x: movingForward ? [34, 146, 278, 410] : [410, 278, 146, 34],
+          y: movingForward ? [30, 44, 62, 84] : [84, 62, 44, 30],
+          filter: ["blur(12px)", "blur(1px)", "blur(2px)", "blur(18px)"],
+        }}
+        transition={{ delay: 0.34, duration: 1.7, ease: EASE }}
+      />
+
+      <motion.div
+        className="cosmic-solar-lineup"
+        initial={{
+          opacity: movingForward ? 0 : 0.35,
+          scale: movingForward ? 1.55 : 0.68,
+          y: movingForward ? 62 : -18,
+          filter: movingForward ? "blur(20px)" : "blur(6px)",
+        }}
+        animate={{
+          opacity: movingForward ? [0, 0, 0.95, 1, 0.34] : [0.34, 1, 0.95, 0, 0],
+          scale: movingForward ? [1.55, 1.32, 1, 0.82, 0.72] : [0.72, 0.82, 1, 1.32, 1.55],
+          y: movingForward ? [62, 24, 0, -8, -18] : [-18, -8, 0, 24, 62],
+          filter: movingForward
+            ? ["blur(20px)", "blur(12px)", "blur(0px)", "blur(0px)", "blur(8px)"]
+            : ["blur(8px)", "blur(0px)", "blur(0px)", "blur(12px)", "blur(20px)"],
+        }}
+        transition={{ delay: 0.78, duration: 2.28, ease: EASE }}
+      >
+        <i className="cosmic-solar-sun" />
+        <div className="cosmic-solar-lineup-track">
+          {SOLAR_LINEUP.map((planet) => (
+            <i
+              key={planet.id}
+              className={`cosmic-solar-body ${planet.id}`}
+              style={
+                {
+                  "--body-size": `${planet.size}px`,
+                  "--body-color": planet.color,
+                  "--body-glow": planet.glow,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="cosmic-solar-boom"
+        initial={{ opacity: 0, scale: 0.42 }}
+        animate={{ opacity: [0, 0, 0.85, 0], scale: [0.42, 0.9, 1.7, 2.7] }}
+        transition={{ delay: movingForward ? 2.42 : 0.18, duration: 0.92, ease: EASE }}
+      />
+    </div>
+  );
+}
+
 function CinematicTransition({
   state,
   stages,
@@ -122,6 +219,13 @@ function CinematicTransition({
   const toStage = stages[state.to];
   const movingForward = state.direction > 0;
   const touchesEarth = fromStage?.id === "earth" || toStage?.id === "earth";
+  const solarPassage =
+    (fromStage?.id === "earth" && toStage?.id === "solar") ||
+    (fromStage?.id === "solar" && toStage?.id === "earth");
+  const fromBackdropDuration = solarPassage ? 2.18 : 1.55;
+  const toBackdropDelay = solarPassage ? 1.92 : 0.28;
+  const toBackdropScale = solarPassage ? 1.72 : 1.42;
+  const tunnelDuration = solarPassage ? 2.82 : 1.72;
 
   useEffect(() => {
     if (!fromStage || !toStage) return;
@@ -160,21 +264,21 @@ function CinematicTransition({
         style={{ backgroundImage: `url("${fromStage.backdrop}")` }}
         initial={{ opacity: 0.82, scale: movingForward ? 1.02 : 0.88, filter: "blur(0px)" }}
         animate={{ opacity: 0, scale: movingForward ? 0.54 : 1.24, filter: "blur(18px)" }}
-        transition={{ duration: 1.55, ease: EASE }}
+        transition={{ duration: fromBackdropDuration, ease: EASE }}
       />
       <motion.div
         className="cosmic-transition-backdrop to"
         style={{ backgroundImage: `url("${toStage.backdrop}")` }}
-        initial={{ opacity: 0, scale: movingForward ? 1.42 : 0.74, filter: "blur(22px)" }}
+        initial={{ opacity: 0, scale: movingForward ? toBackdropScale : 0.74, filter: "blur(22px)" }}
         animate={{ opacity: 0.88, scale: 1.04, filter: "blur(0px)" }}
-        transition={{ delay: 0.28, duration: 1.28, ease: EASE }}
+        transition={{ delay: toBackdropDelay, duration: 1.28, ease: EASE }}
       />
 
       <motion.div
         className="cosmic-flight-tunnel"
         initial={{ opacity: 0, scale: movingForward ? 0.68 : 1.24, rotate: movingForward ? -8 : 8 }}
         animate={{ opacity: [0, 0.95, 0.72, 0], scale: movingForward ? [0.68, 1.18, 1.92, 2.38] : [1.28, 0.98, 0.72, 0.58], rotate: movingForward ? 18 : -18 }}
-        transition={{ duration: 1.72, ease: EASE }}
+        transition={{ duration: tunnelDuration, ease: EASE }}
       />
 
       {touchesEarth && (
@@ -200,6 +304,8 @@ function CinematicTransition({
           transition={{ duration: 1.54, ease: EASE }}
         />
       )}
+
+      {solarPassage && <SolarSystemPassage movingForward={movingForward} />}
 
       <div className="cosmic-flight-streaks">
         {STAR_STREAKS.map((streak) => (
@@ -252,6 +358,9 @@ function CinematicTransition({
 }
 
 export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioStartedRef = useRef(false);
+  const audioAttemptRef = useRef(false);
   const touchStartY = useRef(0);
   const busyRef = useRef(false);
   const releaseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -261,6 +370,26 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
   const [cinematicTransition, setCinematicTransition] = useState<CinematicTransitionState | null>(null);
   const reducedMotion = useReducedMotionPreference();
   const stage = COSMIC_STAGES[page];
+
+  const startAudio = useCallback(() => {
+    if (audioStartedRef.current || audioAttemptRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.82;
+    audioAttemptRef.current = true;
+    audio
+      .play()
+      .then(() => {
+        audioStartedRef.current = true;
+      })
+      .catch(() => {
+        audioStartedRef.current = false;
+      })
+      .finally(() => {
+        audioAttemptRef.current = false;
+      });
+  }, []);
 
   const finishCinematicTransition = useCallback((id: number) => {
     setCinematicTransition((current) => {
@@ -275,6 +404,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
       if (lightboxIndex !== null) return;
       if (busyRef.current || nextPage < 0 || nextPage >= COSMIC_STAGES.length || nextPage === page) return;
 
+      startAudio();
       const nextDirection = nextPage > page ? 1 : -1;
       const transitionId = Date.now();
       setDirection(nextDirection);
@@ -286,7 +416,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
         finishCinematicTransition(transitionId);
       }, reducedMotion ? REDUCED_TRANSITION_MS + 120 : CINEMATIC_TRANSITION_MS + 360);
     },
-    [finishCinematicTransition, lightboxIndex, page, reducedMotion]
+    [finishCinematicTransition, lightboxIndex, page, reducedMotion, startAudio]
   );
 
   useEffect(() => {
@@ -295,13 +425,19 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
-      if (event.key === "ArrowDown" || event.key === "ArrowRight" || event.key === "PageDown") goTo(page + 1);
-      if (event.key === "ArrowUp" || event.key === "ArrowLeft" || event.key === "PageUp") goTo(page - 1);
+      if (event.key === "ArrowDown" || event.key === "ArrowRight" || event.key === "PageDown") {
+        startAudio();
+        goTo(page + 1);
+      }
+      if (event.key === "ArrowUp" || event.key === "ArrowLeft" || event.key === "PageUp") {
+        startAudio();
+        goTo(page - 1);
+      }
     };
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [goTo, page]);
+  }, [goTo, page, startAudio]);
 
   useEffect(() => {
     return () => {
@@ -310,6 +446,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
   }, []);
 
   const handleWheel = (event: WheelEvent<HTMLDivElement>) => {
+    startAudio();
     event.preventDefault();
     if (Math.abs(event.deltaY) < 24) return;
     goTo(page + (event.deltaY > 0 ? 1 : -1));
@@ -317,6 +454,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
 
   const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     touchStartY.current = event.touches[0]?.clientY ?? 0;
+    startAudio();
   };
 
   const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
@@ -327,6 +465,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
 
   return (
     <main className={`cosmic-shell ${className}`}>
+      <audio ref={audioRef} src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3" loop preload="auto" />
       <Link href="/imessage" className="cosmic-chat-link" aria-label="open Kathan iMessage">
         Kathan - iMessage
       </Link>
@@ -337,6 +476,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
         onWheel={handleWheel}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        onPointerDown={startAudio}
         tabIndex={0}
         aria-label="cosmic memory archive"
       >
@@ -364,6 +504,8 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
             <ConstellationScene
               stage={stage}
               reducedMotion={reducedMotion}
+              direction={direction}
+              ready={!cinematicTransition}
               onOpen={(index) => setLightboxIndex(index)}
             />
           </motion.section>
@@ -388,7 +530,10 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
               type="button"
               aria-label={`go to ${item.title}`}
               className={index === page ? "active" : ""}
-              onClick={() => goTo(index)}
+              onClick={() => {
+                startAudio();
+                goTo(index);
+              }}
             />
           ))}
         </nav>

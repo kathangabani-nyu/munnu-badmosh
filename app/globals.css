@@ -399,6 +399,7 @@ video {
 .cosmic-transition-backdrop,
 .cosmic-flight-streaks,
 .cosmic-transition-planet,
+.cosmic-solar-passage,
 .cosmic-transition-iris {
   position: absolute;
   inset: 0;
@@ -489,6 +490,105 @@ video {
     inset -28px -16px 44px rgba(0, 0, 0, 0.62),
     inset 12px 10px 22px rgba(255, 255, 255, 0.18);
   will-change: transform, opacity, filter;
+}
+
+.cosmic-solar-passage {
+  z-index: 6;
+  overflow: hidden;
+}
+
+.cosmic-solar-neighbor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(72px, 12vmin, 132px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 9999px;
+  box-shadow: 0 0 54px rgba(255, 255, 255, 0.16), inset -18px -12px 28px rgba(0, 0, 0, 0.58);
+  will-change: transform, opacity, filter;
+}
+
+.cosmic-solar-neighbor.venus {
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.88), transparent 0 10%, rgba(255, 235, 184, 0.72) 18%, transparent 34%),
+    radial-gradient(circle at 62% 64%, #9f6a3e, #e1b96f 48%, #7a4b31 100%);
+}
+
+.cosmic-solar-neighbor.mars {
+  width: clamp(62px, 10vmin, 112px);
+  background:
+    radial-gradient(circle at 30% 26%, rgba(255, 236, 210, 0.86), transparent 0 9%, rgba(255, 166, 118, 0.6) 18%, transparent 34%),
+    radial-gradient(circle at 64% 66%, #753321, #c85d3f 50%, #4a1d17 100%);
+}
+
+.cosmic-solar-lineup {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  z-index: 6;
+  display: flex;
+  width: min(920px, 96vw);
+  align-items: center;
+  gap: clamp(12px, 2.4vw, 34px);
+  translate: -50% -50%;
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  will-change: transform, opacity, filter;
+}
+
+.cosmic-solar-sun {
+  flex: 0 0 clamp(120px, 20vw, 250px);
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 38% 34%, rgba(255, 255, 255, 0.95), rgba(255, 234, 151, 0.9) 12%, #ffb347 38%, #ff6319 68%, rgba(255, 99, 25, 0) 71%);
+  box-shadow: 0 0 64px rgba(255, 179, 71, 0.52), 0 0 160px rgba(255, 99, 25, 0.42);
+}
+
+.cosmic-solar-lineup-track {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  padding-inline: clamp(6px, 1.6vw, 18px);
+}
+
+.cosmic-solar-body {
+  position: relative;
+  width: clamp(14px, calc(var(--body-size) * 0.92), 64px);
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.78), transparent 0 10%, rgba(255, 255, 255, 0.18) 20%, transparent 34%),
+    radial-gradient(circle at 64% 66%, color-mix(in srgb, var(--body-color) 72%, #000), var(--body-color) 52%, color-mix(in srgb, var(--body-color) 46%, #000) 100%);
+  box-shadow: 0 0 26px var(--body-glow), inset -10px -8px 18px rgba(0, 0, 0, 0.58);
+}
+
+.cosmic-solar-body.saturn::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 172%;
+  height: 42%;
+  translate: -50% -50%;
+  rotate: -12deg;
+  border: 2px solid rgba(240, 214, 158, 0.76);
+  border-left-color: rgba(240, 214, 158, 0.28);
+  border-right-color: rgba(240, 214, 158, 0.28);
+  border-radius: 9999px;
+}
+
+.cosmic-solar-boom {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.72) 0 5%, rgba(255, 179, 71, 0.34) 18%, transparent 46%);
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .cosmic-transition-figures {
@@ -768,6 +868,7 @@ video {
   .cosmic-transition-backdrop,
   .cosmic-flight-tunnel,
   .cosmic-transition-planet,
+  .cosmic-solar-passage,
   .cosmic-flight-streaks i,
   .cosmic-transition-iris,
   .cosmic-transition-figures {
@@ -776,6 +877,7 @@ video {
 
   .cosmic-flight-tunnel,
   .cosmic-transition-planet,
+  .cosmic-solar-passage,
   .cosmic-flight-streaks,
   .cosmic-transition-figures,
   .cosmic-transition-iris {
