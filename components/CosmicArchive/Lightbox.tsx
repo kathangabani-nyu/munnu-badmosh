@@ -10,6 +10,7 @@ interface LightboxProps {
   index: number | null;
   onIndexChange: (index: number) => void;
   onClose: () => void;
+  reducedMotion: boolean;
 }
 
 function ExpandedMedia({ item }: { item: MediaItem }) {
@@ -30,7 +31,31 @@ function ExpandedMedia({ item }: { item: MediaItem }) {
   return <img src={item.src} alt="" className="cosmic-lightbox-media" draggable={false} />;
 }
 
-export function Lightbox({ nodes, index, onIndexChange, onClose }: LightboxProps) {
+function lightboxInitial(direction: number, reducedMotion: boolean) {
+  if (reducedMotion) return { opacity: 0, scale: 0.98, filter: "blur(0px)" };
+
+  return {
+    x: direction > 0 ? 140 : -140,
+    rotateY: direction > 0 ? -13 : 13,
+    scale: 0.92,
+    opacity: 0,
+    filter: "blur(16px)",
+  };
+}
+
+function lightboxExit(direction: number, reducedMotion: boolean) {
+  if (reducedMotion) return { opacity: 0, scale: 0.98, filter: "blur(0px)" };
+
+  return {
+    x: direction > 0 ? -140 : 140,
+    rotateY: direction > 0 ? 13 : -13,
+    scale: 0.92,
+    opacity: 0,
+    filter: "blur(16px)",
+  };
+}
+
+export function Lightbox({ nodes, index, onIndexChange, onClose, reducedMotion }: LightboxProps) {
   const [direction, setDirection] = useState(1);
   const open = index !== null && nodes[index];
   const active = open ? nodes[index] : null;
@@ -95,26 +120,14 @@ export function Lightbox({ nodes, index, onIndexChange, onClose }: LightboxProps
               className={`cosmic-lightbox-frame ${active.items.length > 1 ? "paired" : ""}`}
               onClick={(event) => event.stopPropagation()}
               custom={direction}
-              drag="x"
-              dragElastic={0.18}
+              drag={reducedMotion ? false : "x"}
+              dragElastic={reducedMotion ? 0 : 0.18}
               dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={handleDragEnd}
-              initial={{
-                x: direction > 0 ? 140 : -140,
-                rotateY: direction > 0 ? -13 : 13,
-                scale: 0.92,
-                opacity: 0,
-                filter: "blur(16px)",
-              }}
+              onDragEnd={reducedMotion ? undefined : handleDragEnd}
+              initial={lightboxInitial(direction, reducedMotion)}
               animate={{ x: 0, rotateY: 0, scale: 1, opacity: 1, filter: "blur(0px)" }}
-              exit={{
-                x: direction > 0 ? -140 : 140,
-                rotateY: direction > 0 ? 13 : -13,
-                scale: 0.92,
-                opacity: 0,
-                filter: "blur(16px)",
-              }}
-              transition={{ duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+              exit={lightboxExit(direction, reducedMotion)}
+              transition={{ duration: reducedMotion ? 0.12 : 0.46, ease: [0.16, 1, 0.3, 1] }}
             >
               {active.items.map((item) => (
                 <ExpandedMedia key={item.src} item={item} />
