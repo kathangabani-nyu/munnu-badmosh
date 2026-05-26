@@ -18,6 +18,7 @@ export interface OrbitPoint {
 
 export interface ArchiveNode {
   id: string;
+  label: string;
   items: MediaItem[];
   x: number;
   y: number;
@@ -35,6 +36,9 @@ export interface CosmicStageConfig {
   cameraDepth: number;
   figureMode: FigureMode;
   accent: string;
+  shortLabel: string;
+  depthTint: string;
+  glowIntensity: number;
   layout: OrbitPoint[];
   nodes: ArchiveNode[];
 }
@@ -146,6 +150,20 @@ function folders(names: string[]): MediaItem[] {
   return unique(names.flatMap((name) => getMediaForFolder(name)));
 }
 
+function titleCase(value: string): string {
+  return value
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function labelForGroup(items: MediaItem[]): string {
+  const source = items[0]?.folder || items[0]?.filename || "Memory";
+  const label = titleCase(source);
+  return label.length > 26 ? `${label.slice(0, 23).trim()}...` : label;
+}
+
 function makeNodes(
   id: StageId,
   groups: MediaItem[][],
@@ -158,6 +176,7 @@ function makeNodes(
       const lap = Math.floor(index / layout.length);
       return {
         id: `${id}-${index}`,
+        label: labelForGroup(items),
         items,
         x: Math.max(6, Math.min(94, coord.x + lap * 2 * (index % 2 ? -1 : 1))),
         y: Math.max(10, Math.min(91, coord.y + lap * 3 * (index % 3 === 0 ? -1 : 1))),
@@ -196,6 +215,9 @@ export const COSMIC_STAGES: CosmicStageConfig[] = [
     cameraDepth: 0,
     figureMode: "codyMay",
     accent: "#7fb8ff",
+    shortLabel: "origin",
+    depthTint: "rgba(127, 184, 255, 0.18)",
+    glowIntensity: 0.72,
     layout: earthLayout,
     nodes: makeNodes("earth", singles(compact([startPhoto])), earthLayout),
   },
@@ -208,6 +230,9 @@ export const COSMIC_STAGES: CosmicStageConfig[] = [
     cameraDepth: 1,
     figureMode: "pair",
     accent: "#ffb347",
+    shortLabel: "home",
+    depthTint: "rgba(255, 179, 71, 0.18)",
+    glowIntensity: 0.82,
     layout: solarLayout,
     nodes: makeNodes("solar", singles(folders(["home", "brooklyn"])), solarLayout),
   },
@@ -220,6 +245,9 @@ export const COSMIC_STAGES: CosmicStageConfig[] = [
     cameraDepth: 2.15,
     figureMode: "split",
     accent: "#b88cff",
+    shortLabel: "us",
+    depthTint: "rgba(184, 140, 255, 0.2)",
+    glowIntensity: 0.9,
     layout: milkyWayLayout,
     nodes: makeNodes(
       "milky-way",
@@ -236,6 +264,9 @@ export const COSMIC_STAGES: CosmicStageConfig[] = [
     cameraDepth: 3.05,
     figureMode: "split",
     accent: "#7dd3fc",
+    shortLabel: "everywhere",
+    depthTint: "rgba(125, 211, 252, 0.18)",
+    glowIntensity: 0.86,
     layout: galaxiesLayout,
     nodes: makeNodes(
       "galaxies",
@@ -262,6 +293,9 @@ export const COSMIC_STAGES: CosmicStageConfig[] = [
     cameraDepth: 4,
     figureMode: "pair",
     accent: "#ff63b7",
+    shortLabel: "you",
+    depthTint: "rgba(255, 99, 183, 0.2)",
+    glowIntensity: 0.98,
     layout: nebulaLayout,
     nodes: makeNodes(
       "nebula",
@@ -282,6 +316,9 @@ export const COSMIC_STAGES: CosmicStageConfig[] = [
     cameraDepth: 5.2,
     figureMode: "codyMay",
     accent: "#ff6319",
+    shortLabel: "last light",
+    depthTint: "rgba(255, 99, 25, 0.2)",
+    glowIntensity: 1.08,
     layout: blackHoleLayout,
     nodes: makeNodes("black-hole", singles(compact([lastPhoto])), blackHoleLayout),
   },

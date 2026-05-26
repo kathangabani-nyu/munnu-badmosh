@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import type { ArchiveNode } from "./stages";
 import type { MediaItem } from "@/data/media";
 
@@ -29,6 +32,11 @@ function ExpandedMedia({ item }: { item: MediaItem }) {
   }
 
   return <img src={item.src} alt="" className="cosmic-lightbox-media" draggable={false} />;
+}
+
+function mediaLabel(item: MediaItem) {
+  const cleanName = item.filename.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
+  return cleanName.length > 42 ? `${cleanName.slice(0, 39).trim()}...` : cleanName;
 }
 
 function lightboxInitial(direction: number, reducedMotion: boolean) {
@@ -99,12 +107,23 @@ export function Lightbox({ nodes, index, onIndexChange, onClose, reducedMotion }
           transition={{ duration: 0.25 }}
           role="dialog"
           aria-modal="true"
+          aria-label={active.label}
         >
-          <button type="button" className="cosmic-lightbox-close" onClick={onClose} aria-label="close">
-            <span aria-hidden />
-          </button>
-          <button
+          <div className="cosmic-lightbox-panel" onClick={(event) => event.stopPropagation()}>
+            <p>{active.items[0]?.type === "video" ? "video memory" : "photo memory"}</p>
+            <h2>{active.label}</h2>
+            <span>
+              {index !== null ? index + 1 : 1} / {nodes.length}
+            </span>
+          </div>
+
+          <Button type="button" variant="glass" size="icon" className="cosmic-lightbox-close" onClick={onClose} aria-label="close">
+            <X className="h-5 w-5" aria-hidden />
+          </Button>
+          <Button
             type="button"
+            variant="glass"
+            size="icon"
             className="cosmic-lightbox-arrow cosmic-lightbox-prev"
             onClick={(event) => {
               event.stopPropagation();
@@ -112,8 +131,8 @@ export function Lightbox({ nodes, index, onIndexChange, onClose, reducedMotion }
             }}
             aria-label="previous"
           >
-            <span aria-hidden />
-          </button>
+            <ChevronLeft className="h-5 w-5" aria-hidden />
+          </Button>
           <AnimatePresence initial={false} mode="wait" custom={direction}>
             <motion.div
               key={active.id}
@@ -130,12 +149,17 @@ export function Lightbox({ nodes, index, onIndexChange, onClose, reducedMotion }
               transition={{ duration: reducedMotion ? 0.12 : 0.46, ease: [0.16, 1, 0.3, 1] }}
             >
               {active.items.map((item) => (
-                <ExpandedMedia key={item.src} item={item} />
+                <figure key={item.src} className="cosmic-lightbox-figure">
+                  <ExpandedMedia item={item} />
+                  <figcaption>{mediaLabel(item)}</figcaption>
+                </figure>
               ))}
             </motion.div>
           </AnimatePresence>
-          <button
+          <Button
             type="button"
+            variant="glass"
+            size="icon"
             className="cosmic-lightbox-arrow cosmic-lightbox-next"
             onClick={(event) => {
               event.stopPropagation();
@@ -143,8 +167,8 @@ export function Lightbox({ nodes, index, onIndexChange, onClose, reducedMotion }
             }}
             aria-label="next"
           >
-            <span aria-hidden />
-          </button>
+            <ChevronRight className="h-5 w-5" aria-hidden />
+          </Button>
         </motion.div>
       )}
     </AnimatePresence>

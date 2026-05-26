@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
+import gsap from "gsap";
 import type { CosmicStageConfig } from "./stages";
 
 interface CosmicBackdropProps {
@@ -12,6 +13,7 @@ interface CosmicBackdropProps {
 }
 
 export function CosmicBackdrop({ stages, activeIndex, direction, reducedMotion }: CosmicBackdropProps) {
+  const backdropRef = useRef<HTMLDivElement>(null);
   const activeDepth = stages[activeIndex]?.cameraDepth ?? 0;
   const stars = useMemo(
     () =>
@@ -25,8 +27,33 @@ export function CosmicBackdrop({ stages, activeIndex, direction, reducedMotion }
     []
   );
 
+  useEffect(() => {
+    if (reducedMotion || !backdropRef.current) return undefined;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".cosmic-sparse-stars i",
+        { y: direction > 0 ? 18 : -18, opacity: 0.05 },
+        {
+          y: 0,
+          opacity: (index) => 0.18 + (index % 5) * 0.055,
+          duration: 1.18,
+          stagger: { amount: 0.42, from: direction > 0 ? "start" : "end" },
+          ease: "power3.out",
+        }
+      );
+      gsap.fromTo(
+        ".cosmic-backdrop-veil",
+        { opacity: 0.72 },
+        { opacity: 1, duration: 1.24, ease: "sine.out" }
+      );
+    }, backdropRef);
+
+    return () => ctx.revert();
+  }, [activeIndex, direction, reducedMotion]);
+
   return (
-    <div className="cosmic-backdrop" aria-hidden>
+    <div ref={backdropRef} className="cosmic-backdrop" aria-hidden>
       {stages.map((stage, index) => {
         const active = index === activeIndex;
         const depthDelta = stage.cameraDepth - activeDepth;

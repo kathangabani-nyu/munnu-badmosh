@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
+import gsap from "gsap";
 import type { ArchiveNode, CosmicStageConfig } from "./stages";
 import type { MediaItem } from "@/data/media";
 
@@ -61,8 +63,29 @@ function getSwoopState(node: ArchiveNode, index: number, direction: number, redu
 }
 
 export function ConstellationScene({ stage, onOpen, reducedMotion, direction, ready }: ConstellationSceneProps) {
+  const sceneRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ready || reducedMotion || !sceneRef.current) return undefined;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".cosmic-node-orbit",
+        { opacity: 0, scale: 0.72, rotate: -18 },
+        { opacity: 1, scale: 1, rotate: 0, duration: 1.1, stagger: 0.035, ease: "expo.out" }
+      );
+      gsap.fromTo(
+        ".cosmic-node-label",
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: 0.72, delay: 0.12, stagger: 0.028, ease: "power3.out" }
+      );
+    }, sceneRef);
+
+    return () => ctx.revert();
+  }, [ready, reducedMotion, stage.id]);
+
   return (
-    <div className={`cosmic-constellation cosmic-constellation-${stage.id}`}>
+    <div ref={sceneRef} className={`cosmic-constellation cosmic-constellation-${stage.id}`}>
       <svg className="cosmic-constellation-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
         {stage.nodes.slice(1).map((node, index) => {
           const previous = stage.nodes[index];
@@ -92,6 +115,7 @@ export function ConstellationScene({ stage, onOpen, reducedMotion, direction, re
               "--node-y": `${node.y}%`,
               "--node-size": `${node.size}px`,
               "--node-rotate": `${node.rotate}deg`,
+              "--node-glow-strength": stage.glowIntensity,
             } as CSSProperties
           }
           onClick={() => onOpen(index)}
@@ -102,9 +126,12 @@ export function ConstellationScene({ stage, onOpen, reducedMotion, direction, re
             duration: reducedMotion ? 0.01 : 1.08,
             ease: [0.16, 1, 0.3, 1],
           }}
-          aria-label="open memory"
+          aria-label={`open ${node.label} memory`}
         >
+          <span className="cosmic-node-orbit" aria-hidden />
+          <span className="cosmic-node-sheen" aria-hidden />
           <NodePreview node={node} />
+          <span className="cosmic-node-label">{node.label}</span>
         </motion.button>
       ))}
     </div>

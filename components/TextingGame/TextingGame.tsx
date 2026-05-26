@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ChatBubble } from "./ChatBubble";
 import { TypingIndicator } from "./TypingIndicator";
 import { ChoiceButtons } from "./ChoiceButtons";
@@ -109,26 +111,29 @@ export function TextingGame({ onComplete }: TextingGameProps) {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 bg-[#F2F2F7] z-40 flex flex-col font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif]"
+      className="fixed inset-0 z-40 flex flex-col overflow-hidden bg-[radial-gradient(circle_at_50%_-10%,rgba(10,132,255,0.18),transparent_34%),linear-gradient(180deg,#fbfbfd_0%,#f1f2f7_55%,#e9ecf4_100%)] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif]"
     >
-      {/* Header */}
-      <div className="pt-[env(safe-area-inset-top)] px-5 py-3 text-center border-b border-[#D1D1D6] relative bg-white/85 backdrop-blur-md">
-        <p className="text-[0.82rem] font-semibold text-[#1D1D1F]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(255,255,255,0.9),transparent_24%),radial-gradient(circle_at_82%_80%,rgba(10,132,255,0.12),transparent_28%)]" />
+
+      <div className="relative border-b border-white/60 bg-white/72 px-5 py-3 pt-[env(safe-area-inset-top)] text-center shadow-[0_12px_36px_-28px_rgba(29,29,31,0.55)] backdrop-blur-2xl">
+        <p className="text-[0.82rem] font-semibold text-[#1D1D1F] drop-shadow-sm">
           munna <span aria-hidden>💀</span>
         </p>
         <p className="text-[0.68rem] text-[#8E8E93] mt-0.5">iMessage (fake)</p>
-        <button
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
           onClick={onComplete}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-[0.75rem] text-[#8E8E93] hover:text-[#636366] transition-colors cursor-pointer"
+          className="absolute right-3 top-1/2 h-8 -translate-y-1/2 gap-0.5 px-2 text-[0.75rem] text-[#6b6b70] hover:bg-black/5 hover:text-[#1D1D1F]"
         >
-          skip &rsaquo;
-        </button>
+          skip <ChevronRight className="h-3.5 w-3.5" aria-hidden />
+        </Button>
       </div>
 
-      {/* Chat area */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto px-3 py-3"
+        className="relative flex-1 overflow-y-auto px-3 py-4"
         style={{ scrollBehavior: "smooth" }}
       >
         <AnimatePresence mode="popLayout">

@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, TouchEvent, WheelEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ConstellationScene } from "./ConstellationScene";
 import { CosmicBackdrop } from "./CosmicBackdrop";
+import { CosmicHud, StageTitle } from "./CosmicHud";
 import { FigurePhoto } from "./FigurePhoto";
 import { Lightbox } from "./Lightbox";
 import { COSMIC_STAGES, type CosmicStageConfig } from "./stages";
@@ -60,29 +60,6 @@ function useReducedMotionPreference() {
   }, []);
 
   return reduced;
-}
-
-function StageTitle({
-  kicker,
-  title,
-  reducedMotion,
-}: {
-  kicker: string;
-  title: string;
-  reducedMotion: boolean;
-}) {
-  return (
-    <motion.div
-      className="cosmic-stage-title"
-      initial={{ opacity: 0, y: -16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10, transition: { duration: reducedMotion ? 0.01 : 0.16 } }}
-      transition={{ duration: reducedMotion ? 0.01 : 0.62, ease: EASE }}
-    >
-      <p>{kicker}</p>
-      <h1>{title}</h1>
-    </motion.div>
-  );
 }
 
 function getCameraState(stage: CosmicStageConfig, direction: number, phase: "enter" | "center" | "exit", reducedMotion: boolean) {
@@ -511,13 +488,16 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
   return (
     <main className={`cosmic-shell ${className}`}>
       <audio ref={audioRef} src="/media/Radiohead - Weird Fishes _ Arpeggi.mp3" loop preload="auto" />
-      <Link href="/imessage" className="cosmic-chat-link" aria-label="open Kathan iMessage">
-        Kathan - iMessage
-      </Link>
 
       <div
         className="cosmic-stage"
-        style={{ "--stage-accent": stage.accent } as CSSProperties}
+        style={
+          {
+            "--stage-accent": stage.accent,
+            "--stage-depth-tint": stage.depthTint,
+            "--stage-glow-strength": stage.glowIntensity,
+          } as CSSProperties
+        }
         onWheel={handleWheel}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -529,6 +509,14 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
         <Globe visible={stage.id === "earth"} reducedMotion={reducedMotion} />
         <div className="cosmic-vignette" aria-hidden />
         <div className="cosmic-grain" aria-hidden />
+        <CosmicHud
+          stages={COSMIC_STAGES}
+          activeIndex={page}
+          onSelect={(index) => {
+            startAudio();
+            goTo(index);
+          }}
+        />
 
         <AnimatePresence initial={false}>
           {!cinematicTransition && (
@@ -568,20 +556,6 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
           )}
         </AnimatePresence>
 
-        <nav className="cosmic-nav" aria-label="cosmic chapters">
-          {COSMIC_STAGES.map((item, index) => (
-            <button
-              key={item.id}
-              type="button"
-              aria-label={`go to ${item.title}`}
-              className={index === page ? "active" : ""}
-              onClick={() => {
-                startAudio();
-                goTo(index);
-              }}
-            />
-          ))}
-        </nav>
       </div>
 
       <Lightbox

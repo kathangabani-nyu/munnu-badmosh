@@ -11,7 +11,7 @@ export function TypingIndicator() {
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="flex justify-start mb-3"
     >
-      <div className="bg-[#E9E9EB] rounded-[1.1rem] rounded-bl-sm px-3.5 py-2.5 flex gap-1 items-center">
+      <div className="flex items-center gap-1 rounded-[1.1rem] rounded-bl-sm bg-white/82 px-3.5 py-2.5 shadow-[0_12px_28px_-24px_rgba(29,29,31,0.55)] ring-1 ring-black/[0.04] backdrop-blur-xl">
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
