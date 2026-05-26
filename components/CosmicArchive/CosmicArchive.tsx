@@ -14,7 +14,7 @@ import { COSMIC_STAGES, type CosmicStageConfig } from "./stages";
 const Globe = dynamic(() => import("./Globe").then((mod) => mod.Globe), { ssr: false });
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const CINEMATIC_TRANSITION_MS = 3200;
+const CINEMATIC_TRANSITION_MS = 2300;
 const REDUCED_TRANSITION_MS = 220;
 
 const STAR_STREAKS = Array.from({ length: 52 }, (_, index) => ({
@@ -222,10 +222,12 @@ function CinematicTransition({
   const solarPassage =
     (fromStage?.id === "earth" && toStage?.id === "solar") ||
     (fromStage?.id === "solar" && toStage?.id === "earth");
-  const fromBackdropDuration = solarPassage ? 2.18 : 1.55;
-  const toBackdropDelay = solarPassage ? 1.92 : 0.28;
-  const toBackdropScale = solarPassage ? 1.72 : 1.42;
-  const tunnelDuration = solarPassage ? 2.82 : 1.72;
+  const blackHolePassage = fromStage?.id === "nebula" || toStage?.id === "black-hole";
+  const transitionClass = `route-${fromStage?.id ?? "unknown"}-to-${toStage?.id ?? "unknown"}`;
+  const fromBackdropDuration = solarPassage ? 1.48 : 1.16;
+  const toBackdropDelay = solarPassage ? 0.72 : 0.34;
+  const toBackdropScale = solarPassage ? 1.58 : blackHolePassage ? 1.7 : 1.44;
+  const tunnelDuration = solarPassage ? 1.88 : blackHolePassage ? 2.04 : 1.56;
 
   useEffect(() => {
     if (!fromStage || !toStage) return;
@@ -256,23 +258,46 @@ function CinematicTransition({
   return (
     <div
       key={state.id}
-      className={`cosmic-cinematic-transition ${movingForward ? "forward" : "backward"}`}
+      className={`cosmic-cinematic-transition ${movingForward ? "forward" : "backward"} ${transitionClass}`}
       aria-hidden
     >
       <motion.div
         className="cosmic-transition-backdrop from"
         style={{ backgroundImage: `url("${fromStage.backdrop}")` }}
-        initial={{ opacity: 0.82, scale: movingForward ? 1.02 : 0.88, filter: "blur(0px)" }}
-        animate={{ opacity: 0, scale: movingForward ? 0.54 : 1.24, filter: "blur(18px)" }}
+        initial={{ opacity: 0.86, scale: movingForward ? 1.02 : 0.92, filter: "blur(0px)" }}
+        animate={{ opacity: 0, scale: movingForward ? 0.52 : 1.28, filter: "blur(12px)" }}
         transition={{ duration: fromBackdropDuration, ease: EASE }}
       />
       <motion.div
         className="cosmic-transition-backdrop to"
         style={{ backgroundImage: `url("${toStage.backdrop}")` }}
-        initial={{ opacity: 0, scale: movingForward ? toBackdropScale : 0.74, filter: "blur(22px)" }}
-        animate={{ opacity: 0.88, scale: 1.04, filter: "blur(0px)" }}
-        transition={{ delay: toBackdropDelay, duration: 1.28, ease: EASE }}
+        initial={{ opacity: 0, scale: movingForward ? toBackdropScale : 0.74, filter: "blur(14px)" }}
+        animate={{ opacity: 0.92, scale: 1.03, filter: "blur(0px)" }}
+        transition={{ delay: toBackdropDelay, duration: 1.08, ease: EASE }}
       />
+
+      <motion.div
+        className="cosmic-camera-wake"
+        initial={{ opacity: 0, scale: movingForward ? 0.78 : 1.16, rotate: movingForward ? -9 : 9 }}
+        animate={{
+          opacity: [0, 0.92, 0.68, 0],
+          scale: movingForward ? [0.78, 1.04, 1.48, 1.9] : [1.26, 1.02, 0.82, 0.62],
+          rotate: movingForward ? [-9, 0, 10, 20] : [9, 0, -10, -20],
+        }}
+        transition={{ duration: tunnelDuration, ease: EASE }}
+      >
+        {Array.from({ length: 7 }, (_, index) => (
+          <i
+            key={index}
+            style={
+              {
+                "--ring-size": `${18 + index * 11}vmin`,
+                "--ring-opacity": `${0.62 - index * 0.065}`,
+              } as CSSProperties
+            }
+          />
+        ))}
+      </motion.div>
 
       <motion.div
         className="cosmic-flight-tunnel"
@@ -306,6 +331,18 @@ function CinematicTransition({
       )}
 
       {solarPassage && <SolarSystemPassage movingForward={movingForward} />}
+
+      <motion.div
+        className="cosmic-match-flare"
+        initial={{ opacity: 0, scaleX: 0.2, scaleY: 0.58, rotate: movingForward ? -18 : 18 }}
+        animate={{
+          opacity: [0, 0.84, 0],
+          scaleX: [0.2, 1.4, 2.1],
+          scaleY: [0.58, 0.78, 0.2],
+          rotate: movingForward ? [-18, -6, 8] : [18, 6, -8],
+        }}
+        transition={{ delay: solarPassage ? 0.46 : 0.28, duration: 0.94, ease: EASE }}
+      />
 
       <div className="cosmic-flight-streaks">
         {STAR_STREAKS.map((streak) => (
@@ -349,8 +386,16 @@ function CinematicTransition({
       <motion.div
         className="cosmic-transition-iris"
         initial={{ opacity: 0, scale: 0.18 }}
-        animate={{ opacity: [0, 0.9, 0], scale: [0.18, 1.22, 2.8] }}
-        transition={{ delay: 0.18, duration: 1.38, ease: EASE }}
+        animate={{ opacity: [0, 0.94, 0.62, 0], scale: [0.18, 0.94, 1.74, 3.1] }}
+        transition={{ delay: 0.12, duration: 1.52, ease: EASE }}
+        style={{ "--stage-accent": toStage.accent } as CSSProperties}
+      />
+
+      <motion.div
+        className="cosmic-arrival-bloom"
+        initial={{ opacity: 0, scale: 0.72 }}
+        animate={{ opacity: [0, 0, 0.74, 0], scale: [0.72, 1, 1.55, 2.35] }}
+        transition={{ delay: solarPassage ? 1.18 : 0.86, duration: 0.82, ease: EASE }}
         style={{ "--stage-accent": toStage.accent } as CSSProperties}
       />
     </div>
@@ -505,7 +550,7 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
               stage={stage}
               reducedMotion={reducedMotion}
               direction={direction}
-              ready={!cinematicTransition}
+              ready={!cinematicTransition || cinematicTransition.to === page}
               onOpen={(index) => setLightboxIndex(index)}
             />
           </motion.section>

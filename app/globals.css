@@ -397,10 +397,13 @@ video {
 
 .cosmic-cinematic-transition,
 .cosmic-transition-backdrop,
+.cosmic-camera-wake,
 .cosmic-flight-streaks,
 .cosmic-transition-planet,
 .cosmic-solar-passage,
-.cosmic-transition-iris {
+.cosmic-transition-iris,
+.cosmic-match-flare,
+.cosmic-arrival-bloom {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -409,8 +412,12 @@ video {
 .cosmic-cinematic-transition {
   z-index: 84;
   overflow: hidden;
-  background: #010104;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--stage-accent) 18%, transparent) 0 10%, transparent 34%),
+    #010104;
   opacity: 1;
+  perspective: 1200px;
+  transform-style: preserve-3d;
 }
 
 .cosmic-cinematic-transition.reduced {
@@ -422,6 +429,7 @@ video {
   background-repeat: no-repeat;
   background-size: cover;
   filter: saturate(1.06) contrast(1.08) brightness(0.86);
+  transform-origin: center;
   will-change: transform, opacity, filter;
 }
 
@@ -431,6 +439,42 @@ video {
 
 .cosmic-transition-backdrop.to {
   z-index: 2;
+}
+
+.cosmic-camera-wake {
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.cosmic-camera-wake::before {
+  content: "";
+  position: absolute;
+  width: min(90vmin, 820px);
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background:
+    conic-gradient(from 220deg, transparent 0 18%, color-mix(in srgb, var(--stage-accent) 42%, transparent) 24%, rgba(255, 255, 255, 0.5) 26%, transparent 34% 100%),
+    radial-gradient(circle, transparent 0 42%, rgba(255, 255, 255, 0.16) 48%, transparent 58%);
+  filter: blur(0.4px);
+  opacity: 0.74;
+}
+
+.cosmic-camera-wake i {
+  position: absolute;
+  width: var(--ring-size);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--stage-accent) 50%, rgba(255, 255, 255, 0.34));
+  border-radius: 9999px;
+  opacity: var(--ring-opacity);
+  box-shadow:
+    0 0 28px color-mix(in srgb, var(--stage-accent) 28%, transparent),
+    inset 0 0 24px rgba(255, 255, 255, 0.08);
+  transform: rotateX(68deg) rotateZ(-10deg);
 }
 
 .cosmic-flight-tunnel {
@@ -448,6 +492,24 @@ video {
     radial-gradient(circle, color-mix(in srgb, var(--stage-accent) 34%, transparent) 0 16%, rgba(255, 255, 255, 0.08) 26%, transparent 62%);
   box-shadow: 0 0 110px color-mix(in srgb, var(--stage-accent) 28%, transparent);
   mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.cosmic-match-flare {
+  left: 50%;
+  top: 50%;
+  z-index: 7;
+  width: min(118vmin, 1080px);
+  height: min(16vmin, 150px);
+  right: auto;
+  bottom: auto;
+  translate: -50% -50%;
+  border-radius: 9999px;
+  background:
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--stage-accent) 46%, transparent), rgba(255, 255, 255, 0.92), color-mix(in srgb, var(--stage-accent) 54%, transparent), transparent);
+  filter: blur(10px);
+  mix-blend-mode: screen;
+  transform-origin: center;
   will-change: transform, opacity;
 }
 
@@ -616,10 +678,31 @@ video {
 .cosmic-transition-iris {
   z-index: 8;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.72) 0 2%, color-mix(in srgb, var(--stage-accent) 50%, transparent) 8%, transparent 30%),
-    radial-gradient(circle at 50% 50%, transparent 0 42%, rgba(0, 0, 0, 0.72) 72%, #010104 100%);
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.86) 0 1.6%, color-mix(in srgb, var(--stage-accent) 68%, transparent) 7%, transparent 28%),
+    radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(0, 0, 0, 0.72) 68%, #010104 100%);
   mix-blend-mode: screen;
   will-change: transform, opacity;
+}
+
+.cosmic-arrival-bloom {
+  z-index: 9;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0 3%, color-mix(in srgb, var(--stage-accent) 44%, transparent) 14%, transparent 44%);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.cosmic-cinematic-transition.route-earth-to-solar .cosmic-match-flare,
+.cosmic-cinematic-transition.route-solar-to-earth .cosmic-match-flare {
+  height: min(22vmin, 190px);
+  filter: blur(14px);
+}
+
+.cosmic-cinematic-transition.route-nebula-to-black-hole .cosmic-camera-wake::before,
+.cosmic-cinematic-transition.route-black-hole-to-nebula .cosmic-camera-wake::before {
+  background:
+    conic-gradient(from 80deg, transparent 0 14%, rgba(255, 255, 255, 0.54) 18%, color-mix(in srgb, var(--stage-accent) 48%, transparent) 28%, transparent 42% 100%),
+    radial-gradient(circle, #010104 0 16%, color-mix(in srgb, var(--stage-accent) 28%, transparent) 22%, transparent 58%);
 }
 
 .figure-photo {
@@ -866,21 +949,27 @@ video {
   .cosmic-lightbox-frame,
   .cosmic-cinematic-transition,
   .cosmic-transition-backdrop,
+  .cosmic-camera-wake,
   .cosmic-flight-tunnel,
   .cosmic-transition-planet,
   .cosmic-solar-passage,
   .cosmic-flight-streaks i,
   .cosmic-transition-iris,
-  .cosmic-transition-figures {
+  .cosmic-transition-figures,
+  .cosmic-match-flare,
+  .cosmic-arrival-bloom {
     transition: none !important;
   }
 
   .cosmic-flight-tunnel,
   .cosmic-transition-planet,
   .cosmic-solar-passage,
+  .cosmic-camera-wake,
   .cosmic-flight-streaks,
   .cosmic-transition-figures,
-  .cosmic-transition-iris {
+  .cosmic-transition-iris,
+  .cosmic-match-flare,
+  .cosmic-arrival-bloom {
     display: none;
   }
 }
