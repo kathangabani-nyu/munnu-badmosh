@@ -34,11 +34,6 @@ function ExpandedMedia({ item }: { item: MediaItem }) {
   return <img src={item.src} alt="" className="cosmic-lightbox-media" draggable={false} />;
 }
 
-function mediaLabel(item: MediaItem) {
-  const cleanName = item.filename.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
-  return cleanName.length > 42 ? `${cleanName.slice(0, 39).trim()}...` : cleanName;
-}
-
 function lightboxInitial(direction: number, reducedMotion: boolean) {
   if (reducedMotion) return { opacity: 0, scale: 0.98, filter: "blur(0px)" };
 
@@ -107,11 +102,10 @@ export function Lightbox({ nodes, index, onIndexChange, onClose, reducedMotion }
           transition={{ duration: 0.25 }}
           role="dialog"
           aria-modal="true"
-          aria-label={active.label}
+          aria-label="open memory"
         >
           <div className="cosmic-lightbox-panel" onClick={(event) => event.stopPropagation()}>
             <p>{active.items[0]?.type === "video" ? "video memory" : "photo memory"}</p>
-            <h2>{active.label}</h2>
             <span>
               {index !== null ? index + 1 : 1} / {nodes.length}
             </span>
@@ -151,7 +145,6 @@ export function Lightbox({ nodes, index, onIndexChange, onClose, reducedMotion }
               {active.items.map((item) => (
                 <figure key={item.src} className="cosmic-lightbox-figure">
                   <ExpandedMedia item={item} />
-                  <figcaption>{mediaLabel(item)}</figcaption>
                 </figure>
               ))}
             </motion.div>

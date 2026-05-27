@@ -26,6 +26,10 @@ const videoExt = new Set([".mp4", ".mov", ".webm", ".m4v"]);
 
 const byFolder = {};
 
+function publicMediaPath(...segments) {
+  return `/${["media", ...segments].map(encodeURIComponent).join("/")}`;
+}
+
 function createMediaItem({ folder, name, index, src }) {
   const ext = path.extname(name).toLowerCase();
   const type = imageExt.has(ext) ? "photo" : videoExt.has(ext) ? "video" : null;
@@ -54,7 +58,7 @@ if (fs.existsSync(mediaRoot)) {
         folder: rootFolderKey,
         name,
         index,
-        src: `/media/${name}`,
+        src: publicMediaPath(name),
       })
     )
     .filter(Boolean);
@@ -80,7 +84,7 @@ for (const folder of targetFolders) {
         folder,
         name,
         index,
-        src: `/media/${folder}/${name}`,
+        src: publicMediaPath(folder, name),
       })
     )
     .filter(Boolean);

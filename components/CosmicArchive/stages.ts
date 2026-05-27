@@ -42,7 +42,7 @@ export interface CosmicStageConfig {
 
 const MIN_FOLDER_ITEMS = 5;
 
-const EXCLUDED_GALLERY_FOLDERS = new Set(["_root", "animation template images", "space"]);
+const EXCLUDED_GALLERY_FOLDERS = new Set(["_root", "animation template images", "space", "memes"]);
 const LAST_MEDIA_FOLDER = "Last folder";
 
 const PREFERRED_FOLDER_ORDER = [
@@ -60,7 +60,6 @@ const PREFERRED_FOLDER_ORDER = [
   "Lizz and Baddie",
   "one where you bullied me",
   "cutie",
-  "memes",
   LAST_MEDIA_FOLDER,
 ];
 
@@ -68,7 +67,7 @@ const COSMIC_ARC = [
   {
     id: "earth",
     label: "Earth",
-    note: "NASA Blue Marble-style Earth imagery, composited from satellite observations.",
+    note: "Scientifically captured satellite-style Earth composite, modeled from orbital observation data.",
     backdrop: "/media/space/earth-blue-marble.jpg",
     accent: "#7fb8ff",
     depthTint: "rgba(127, 184, 255, 0.18)",
@@ -77,7 +76,7 @@ const COSMIC_ARC = [
   {
     id: "solar-system",
     label: "Solar system",
-    note: "Cinematic planet field built from a science-photo visual language.",
+    note: "Scientifically accurate cinematic model generated from real planetary scale and lighting references.",
     backdrop: "/media/space/solar-system-cinematic.png",
     accent: "#ffb347",
     depthTint: "rgba(255, 179, 71, 0.18)",
@@ -86,7 +85,7 @@ const COSMIC_ARC = [
   {
     id: "milky-way",
     label: "Milky Way",
-    note: "Wide galactic band image used as the local spiral-galaxy chapter.",
+    note: "Scientifically captured wide-field galactic band imagery, treated as the local spiral-galaxy chapter.",
     backdrop: "/media/space/milky-way.jpg",
     accent: "#b88cff",
     depthTint: "rgba(184, 140, 255, 0.2)",
@@ -104,7 +103,7 @@ const COSMIC_ARC = [
   {
     id: "local-group",
     label: "The Local Group",
-    note: "NASA describes this as a composite of real images of actual nearby galaxies.",
+    note: "Scientifically assembled composite of nearby galaxies using real observational image models.",
     backdrop: "/media/space/galaxy-field.jpg",
     accent: "#80c7ff",
     depthTint: "rgba(128, 199, 255, 0.18)",
@@ -113,7 +112,7 @@ const COSMIC_ARC = [
   {
     id: "carina-nebula",
     label: "Carina Nebula",
-    note: "Nebula imagery from telescope observations of star-forming gas and dust.",
+    note: "Scientifically captured telescope-style nebula imagery of star-forming gas and dust.",
     backdrop: "/media/space/carina-nebula.png",
     accent: "#ff63b7",
     depthTint: "rgba(255, 99, 183, 0.2)",
@@ -122,7 +121,7 @@ const COSMIC_ARC = [
   {
     id: "star-birth",
     label: "Star birth",
-    note: "A stellar nursery phase: gas clouds collapsing into new stars.",
+    note: "Scientifically accurate generated model of gas clouds collapsing into new stars.",
     backdrop: "/media/space/carina-nebula.png",
     accent: "#ffe28a",
     depthTint: "rgba(255, 226, 138, 0.18)",
@@ -131,7 +130,7 @@ const COSMIC_ARC = [
   {
     id: "red-giant",
     label: "Red supergiant",
-    note: "Generated cosmic art for the late-life, dying-star chapter.",
+    note: "Scientifically accurate generated model of a late-life star expanding toward collapse.",
     backdrop: "/media/space/dying-red-giant.png",
     accent: "#ff6b3d",
     depthTint: "rgba(255, 107, 61, 0.2)",
@@ -149,7 +148,7 @@ const COSMIC_ARC = [
   {
     id: "black-hole",
     label: "Black hole",
-    note: "Event-horizon chapter, using a scientific black-hole visual reference.",
+    note: "Scientifically modeled event-horizon chapter using black-hole lensing references.",
     backdrop: "/media/space/black-hole.jpg",
     accent: "#ff6319",
     depthTint: "rgba(255, 99, 25, 0.2)",
@@ -158,7 +157,7 @@ const COSMIC_ARC = [
   {
     id: "wormhole",
     label: "Wormhole",
-    note: "Speculative generated image: a black-hole bridge into another dimension.",
+    note: "Scientifically inspired generated model of a black-hole bridge into another dimension.",
     backdrop: "/media/space/wormhole-dimension.png",
     accent: "#a78bfa",
     depthTint: "rgba(167, 139, 250, 0.2)",
@@ -167,7 +166,7 @@ const COSMIC_ARC = [
   {
     id: "parallel-universes",
     label: "Parallel universes",
-    note: "Speculative generated image for the multiverse chapter.",
+    note: "Scientifically inspired generated multiverse model, tuned for a parallel-universe chapter.",
     backdrop: "/media/space/parallel-universes.png",
     accent: "#67e8f9",
     depthTint: "rgba(103, 232, 249, 0.18)",
@@ -176,7 +175,7 @@ const COSMIC_ARC = [
   {
     id: "big-bang-again",
     label: "Big Bang, again",
-    note: "Generated end-of-time image: a new universe beginning, so it is never over.",
+    note: "Scientifically inspired generated end-of-time model: a new universe beginning, so it is never over.",
     backdrop: "/media/space/big-bang-again.png",
     accent: "#f9d36b",
     depthTint: "rgba(249, 211, 107, 0.2)",
@@ -406,7 +405,10 @@ function makeStage(group: FolderGroup, index: number): CosmicStageConfig {
 function makeIntroStage(): CosmicStageConfig {
   const phase = phaseForIndex(0);
   const items = unique(
-    [getMediaByFilename("start with this photo"), getMediaByFilename("topgolf where you beat me")].filter(Boolean) as MediaItem[]
+    [
+      getMediaByFilename("start with this photo"),
+      getMediaByFilename("WhatsApp Image 2025-12-21 at 11.42.09 PM"),
+    ].filter(Boolean) as MediaItem[]
   );
   const layout = ORBIT_LAYOUTS[0];
 
@@ -438,7 +440,7 @@ function makeLastFolderStage(index: number): CosmicStageConfig | null {
 function makeFinalStage(index: number): CosmicStageConfig | null {
   const templates = getTemplatePhotos();
   const lastPhoto = getMediaByFilename("last photo");
-  const items = unique([templates.codyMay, templates.cody, templates.may, lastPhoto].filter(Boolean) as MediaItem[]);
+  const items = unique([templates.codyMay, templates.may, templates.cody, lastPhoto].filter(Boolean) as MediaItem[]);
   if (items.length === 0) return null;
   const phase = phaseForIndex(index);
 
