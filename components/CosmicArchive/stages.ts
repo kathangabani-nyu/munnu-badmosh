@@ -101,15 +101,6 @@ const COSMIC_ARC = [
     glowIntensity: 0.86,
   },
   {
-    id: "local-group",
-    label: "The Local Group",
-    note: "Scientifically assembled composite of nearby galaxies using real observational image models.",
-    backdrop: "/media/space/galaxy-field.jpg",
-    accent: "#80c7ff",
-    depthTint: "rgba(128, 199, 255, 0.18)",
-    glowIntensity: 0.88,
-  },
-  {
     id: "carina-nebula",
     label: "Carina Nebula",
     note: "Scientifically captured telescope-style nebula imagery of star-forming gas and dust.",
