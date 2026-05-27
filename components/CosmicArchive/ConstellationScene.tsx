@@ -46,18 +46,20 @@ function NodePreview({ node }: { node: ArchiveNode }) {
 }
 
 function getSwoopState(node: ArchiveNode, index: number, direction: number, reducedMotion: boolean) {
-  if (reducedMotion) return { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" };
+  if (reducedMotion) return { opacity: 1, x: 0, y: 0, scale: 1, rotateZ: 0, filter: "blur(0px)" };
 
   const side = index % 2 === 0 ? 1 : -1;
   const depth = node.hero ? 1.15 : 0.82;
-  const fromCenterX = (50 - node.x) * 9 + direction * side * (170 + (index % 4) * 38);
-  const fromCenterY = (50 - node.y) * 6 + (index % 3 === 0 ? 150 : -120);
+  const orbitBias = (index % 5) - 2;
+  const fromCenterX = (50 - node.x) * 10 + direction * side * (220 + (index % 4) * 44);
+  const fromCenterY = (50 - node.y) * 7 + orbitBias * 78 + (index % 3 === 0 ? 170 : -135);
 
   return {
     opacity: 0,
     x: fromCenterX,
     y: fromCenterY,
     scale: depth * 0.58,
+    rotateZ: side * direction * (18 + (index % 4) * 5),
     filter: "blur(22px)",
   };
 }
@@ -87,14 +89,21 @@ export function ConstellationScene({ stage, onOpen, reducedMotion, direction, re
         const swoop = getSwoopState(node, index, direction, reducedMotion);
         const settleX = Math.sign(swoop.x || 1) * -10;
         const settleY = Math.sign(swoop.y || 1) * 7;
+        const settleRotate = Math.sign(swoop.rotateZ || 1) * -2.2;
         const orbitArrival = reducedMotion
-          ? { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" }
+          ? { opacity: 1, x: 0, y: 0, scale: 1, rotateZ: 0, filter: "blur(0px)" }
           : {
               opacity: [0, 0.72, 0.96, 1],
-              x: [swoop.x, swoop.x * 0.28, settleX, 0],
-              y: [swoop.y, swoop.y * 0.2, settleY, 0],
-              scale: [swoop.scale, node.hero ? 1.08 : 1.04, node.hero ? 1.02 : 1.01, 1],
-              filter: ["blur(22px)", "blur(5px)", "blur(0px)", "blur(0px)"],
+              x: [swoop.x, swoop.x * 0.42, settleX, 0],
+              y: [swoop.y, swoop.y * -0.12, settleY, 0],
+              scale: [swoop.scale, node.hero ? 1.1 : 1.055, node.hero ? 1.018 : 1.008, 1],
+              rotateZ: [swoop.rotateZ, swoop.rotateZ * -0.2, settleRotate, 0],
+              filter: [
+                "blur(24px) saturate(0.78)",
+                "blur(7px) saturate(1.2)",
+                "blur(0px) saturate(1.04)",
+                "blur(0px) saturate(1)",
+              ],
             };
 
         return (

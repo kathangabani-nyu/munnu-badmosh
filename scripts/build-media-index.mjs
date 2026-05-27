@@ -6,17 +6,7 @@ const mediaRoot = path.join(root, "public", "media");
 const outPath = path.join(root, "data", "media-index.json");
 const rootFolderKey = "_root";
 
-const configuredFolders = [
-  "sewell-farm",
-  "hamilton-farm",
-  "midtown",
-  "fordham",
-  "central-park",
-  "greenwood",
-  "brooklyn",
-  "home",
-  "road-trip",
-];
+const configuredFolders = [];
 
 const excludedFolders = new Set(["space"]);
 const discoveredFolders = fs.existsSync(mediaRoot)

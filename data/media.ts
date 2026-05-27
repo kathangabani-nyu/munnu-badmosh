@@ -25,6 +25,11 @@ export function getAllMedia(): MediaItem[] {
   return Object.values(index.byFolder).flat();
 }
 
+export function getMediaFolders(): string[] {
+  const index = mediaIndex as MediaIndex;
+  return Object.keys(index.byFolder);
+}
+
 export function getMediaByFilename(substr: string): MediaItem | undefined {
   const needle = substr.toLowerCase();
   return getAllMedia().find((item) => item.filename.toLowerCase().includes(needle));

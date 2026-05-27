@@ -406,7 +406,13 @@ export function CosmicArchive({ className = "" }: CosmicArchiveProps) {
 
         <AnimatePresence initial={false}>
           {!cinematicTransition && (
-            <StageTitle key={`${stage.id}-title`} kicker={stage.kicker} title={stage.title} reducedMotion={reducedMotion} />
+            <StageTitle
+              key={`${stage.id}-title`}
+              kicker={stage.kicker}
+              title={stage.title}
+              subtitle={stage.subtitle}
+              reducedMotion={reducedMotion}
+            />
           )}
         </AnimatePresence>
 

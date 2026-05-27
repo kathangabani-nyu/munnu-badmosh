@@ -13,10 +13,12 @@ const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 export function StageTitle({
   kicker,
   title,
+  subtitle,
   reducedMotion,
 }: {
   kicker: string;
   title: string;
+  subtitle?: string;
   reducedMotion: boolean;
 }) {
   return (
@@ -29,6 +31,7 @@ export function StageTitle({
     >
       {kicker && <p>{kicker}</p>}
       <h1>{title}</h1>
+      {subtitle && <span className="cosmic-stage-subtitle">{subtitle}</span>}
     </motion.div>
   );
 }
